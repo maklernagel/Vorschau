@@ -298,6 +298,12 @@ footer h2{font-size:1.2rem}
   figure.bild{margin:34px 0}
   figure.band-bild img{aspect-ratio:3/1}
 }
+
+  /* Auf dem Telefon nichts unter 12 px: Quellenangaben, KI-Hinweise und
+     Marken liefen mit knapp 11 px und waren in der Hand schwer zu lesen. */
+  @media (max-width: 640px) {
+    .kicker, .eyebrow, .tag, .quelle, .ki, .num, .summary-label { font-size: .78rem; }
+  }
 </style>
 </head>
 <body>

@@ -50,6 +50,12 @@ main{padding:48px 0 72px}
 .note ul{margin:0;padding-left:1.15rem;color:var(--muted);font-size:.95rem}
 .note li{margin:0 0 .35rem}
 footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--muted);font-size:.85rem}
+
+  /* Auf dem Telefon nichts unter 12 px: Quellenangaben, KI-Hinweise und
+     Marken liefen mit knapp 11 px und waren in der Hand schwer zu lesen. */
+  @media (max-width: 640px) {
+    .kicker, .eyebrow, .tag, .quelle, .ki, .num, .summary-label { font-size: .78rem; }
+  }
 </style>
 </head>
 <body>
