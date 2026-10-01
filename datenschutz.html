@@ -3,97 +3,178 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
-<meta name="googlebot" content="noindex,nofollow">
-<title>Datenschutz · Andreas Nagel</title>
+<meta name="robots" content="noindex,nofollow">
+<title>Datenschutzerklärung | Andreas Nagel</title>
 <style>
-  :root{--blau:#0018A8;--tinte:#1a1a1a;--grau:#6b7280;--linie:#dfe3ee;--bg:#f0f2f7}
-  *{box-sizing:border-box}
-  body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);
-       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--tinte)}
-  .karte{width:min(420px,calc(100vw - 40px));background:#fff;border:1px solid var(--linie);
-         border-radius:6px;padding:38px 34px;box-shadow:0 18px 50px rgba(0,24,168,.08)}
-  .kicker{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blau);
-          font-weight:700;margin:0 0 10px}
-  h1{font-size:1.35rem;margin:0 0 6px;line-height:1.3}
-  p{font-size:.92rem;line-height:1.6;color:var(--grau);margin:0 0 22px}
-  label{display:block;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;
-        color:var(--grau);margin:0 0 7px;font-weight:600}
-  input{width:100%;padding:12px 14px;font-size:1rem;border:1px solid var(--linie);
-        border-radius:4px;background:#fbfcfe}
-  input:focus{outline:2px solid var(--blau);outline-offset:1px;border-color:var(--blau)}
-  button{width:100%;margin-top:14px;padding:12px 14px;font-size:.95rem;font-weight:600;
-         color:#fff;background:var(--blau);border:0;border-radius:4px;cursor:pointer}
-  button:disabled{opacity:.55;cursor:progress}
-  .fehler{color:#b3261e;font-size:.85rem;margin:12px 0 0;min-height:1.2em}
-  .fuss{margin:22px 0 0;font-size:.78rem;color:var(--grau)}
+:root{
+  --tanne:#0018a8; --tanne-2:#2340c8; --tinte:#23283b; --stein:#616a80;
+  --papier:#f3f4f7; --karte:#fcfcfe; --linie:rgba(0,24,168,.15);
+  --messing-2:#6c86ef; --messing-soft:#e7ebfb;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papier);color:var(--tinte);font-family:var(--sans);
+  font-size:16.5px;line-height:1.72;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px}
+header{background:var(--tanne);color:#fff;padding:44px 0 38px}
+header .kicker{text-transform:uppercase;letter-spacing:.14em;font-size:.7rem;font-weight:700;
+  color:var(--messing-soft);margin:0 0 10px}
+header h1{margin:0;font-size:1.9rem;font-weight:600;letter-spacing:-.01em}
+header p{margin:12px 0 0;color:#c8d0f4;font-size:.95rem}
+main{padding:44px 0 20px}
+h2{font-size:1.12rem;margin:38px 0 .5rem;color:var(--tanne);font-weight:600}
+h2:first-child{margin-top:0}
+h3{font-size:1rem;margin:24px 0 .4rem;font-weight:600}
+p{margin:0 0 1rem}
+ul{margin:0 0 1rem;padding-left:1.25rem}
+li{margin-bottom:.4rem}
+a{color:var(--tanne-2)}
+.adresse{background:var(--karte);border:1px solid var(--linie);border-radius:4px;padding:20px 24px;margin:0 0 1.2rem}
+.offen{background:var(--messing-soft);border-left:3px solid var(--tanne);border-radius:0 4px 4px 0;
+  padding:16px 20px;margin:26px 0;font-size:.93rem}
+.offen b{color:var(--tanne)}
+.zurueck{display:inline-block;margin:30px 0 0;font-size:.92rem;text-decoration:none;color:var(--tanne-2)}
+footer{border-top:1px solid var(--linie);margin-top:44px;padding:22px 0 46px;font-size:.85rem;color:var(--stein)}
+footer a{color:var(--stein);margin-right:16px}
 </style>
 </head>
 <body>
-<main class="karte" id="tor">
-  <p class="kicker">Geschützte Vorschau</p>
-  <h1>Entwurfsstand Andreas Nagel</h1>
-  <p>Diese Seite ist noch nicht veröffentlicht. Bitte das Passwort eingeben.</p>
-  <form id="formular">
-    <label for="pw">Passwort</label>
-    <input type="password" id="pw" autocomplete="current-password" autofocus>
-    <button type="submit" id="knopf">Vorschau öffnen</button>
-    <p class="fehler" id="fehler"></p>
-  </form>
-  <p class="fuss">Der Inhalt liegt verschlüsselt auf dem Server und ist für Suchmaschinen gesperrt.</p>
+
+<header>
+  <div class="wrap">
+    <p class="kicker">Datenschutz</p>
+    <h1>Datenschutzerklärung</h1>
+    <p>Stand: August 2026</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <h2>1. Verantwortlicher</h2>
+  <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist:</p>
+  <div class="adresse">
+    Andreas Nagel<br>
+    Dickerheide 92a<br>
+    47877 Willich<br>
+    Telefon: <a href="tel:+491728684711">+49 172 8684711</a><br>
+    E-Mail: <a href="mailto:info@maklernagel.de">info@maklernagel.de</a>
+  </div>
+
+  <h2>2. Grundsätzliches zu dieser Website</h2>
+  <p>
+    Diese Website ist bewusst datensparsam aufgebaut. Sie setzt <strong>keine Cookies</strong>,
+    bindet <strong>keine Analyse- oder Tracking-Dienste</strong> ein, nutzt keine Social-Media-Plugins
+    und lädt <strong>keine externen Schriftarten</strong> nach. Alle Schriften und Bilder sind
+    unmittelbar in die Seite eingebettet und werden vom Server dieser Website ausgeliefert.
+    Es findet keine Profilbildung statt.
+  </p>
+
+  <h2>3. Aufruf der Website (Server-Logfiles)</h2>
+  <p>
+    Beim Aufruf dieser Website werden durch den Hosting-Anbieter automatisch Daten übertragen,
+    die Ihr Browser übermittelt. Das sind in der Regel:
+  </p>
+  <ul>
+    <li>IP-Adresse des anfragenden Geräts</li>
+    <li>Datum und Uhrzeit des Zugriffs</li>
+    <li>Name und URL der abgerufenen Datei</li>
+    <li>übertragene Datenmenge und Meldung über den Abruferfolg</li>
+    <li>verwendeter Browser und Betriebssystem</li>
+    <li>gegebenenfalls die zuvor besuchte Seite (Referrer)</li>
+  </ul>
+  <p>
+    Rechtsgrundlage ist Artikel 6 Absatz 1 Buchstabe f DSGVO. Unser berechtigtes Interesse
+    liegt im technisch fehlerfreien Betrieb und in der Sicherheit der Website. Eine Zusammenführung
+    dieser Daten mit anderen Datenquellen findet nicht statt.
+  </p>
+
+  <h3>Hosting</h3>
+  <p>
+    Diese Website wird bei <strong>GitHub Pages</strong> gehostet, einem Angebot der
+    GitHub Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA. GitHub verarbeitet
+    dabei die oben genannten Zugriffsdaten. Eine Übermittlung in die USA kann stattfinden;
+    GitHub ist unter dem EU-US Data Privacy Framework zertifiziert. Näheres finden Sie in der
+    Datenschutzerklärung von GitHub:
+    <a href="https://docs.github.com/de/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">docs.github.com</a>.
+  </p>
+
+  <h2>4. Kontaktaufnahme</h2>
+  <p>
+    Wenn Sie uns per E-Mail oder Telefon kontaktieren, verarbeiten wir Ihre Angaben
+    ausschließlich zur Bearbeitung Ihrer Anfrage und für den Fall von Anschlussfragen.
+    Rechtsgrundlage ist Artikel 6 Absatz 1 Buchstabe b DSGVO, soweit Ihre Anfrage der
+    Anbahnung eines Vertrags dient, im Übrigen Artikel 6 Absatz 1 Buchstabe f DSGVO.
+    Wir löschen diese Daten, sobald sie für den Zweck nicht mehr erforderlich sind und
+    keine gesetzlichen Aufbewahrungsfristen entgegenstehen.
+  </p>
+  <p>
+    Diese Website enthält <strong>kein Kontaktformular</strong>. Es werden also keine Daten
+    über die Seite selbst an uns übertragen.
+  </p>
+
+  <h2>5. Terminbuchung über Microsoft Bookings</h2>
+  <p>
+    Für die Vereinbarung eines Erstgesprächs verweisen wir über einen Link auf
+    <strong>Microsoft Bookings</strong>, einen Dienst der Microsoft Ireland Operations Limited,
+    One Microsoft Place, South County Business Park, Leopardstown, Dublin 18, Irland.
+  </p>
+  <p>
+    Der Link wird erst durch Ihren Klick aufgerufen — bis dahin werden keine Daten an Microsoft
+    übertragen. Buchen Sie dort einen Termin, verarbeitet Microsoft die von Ihnen angegebenen
+    Daten (in der Regel Name, E-Mail-Adresse, gewünschter Zeitpunkt und Ihre Nachricht) sowie
+    technische Zugriffsdaten. Für diese Verarbeitung gilt die Datenschutzerklärung von Microsoft:
+    <a href="https://privacy.microsoft.com/de-de/privacystatement" target="_blank" rel="noopener">privacy.microsoft.com</a>.
+    Wir erhalten von Microsoft die Buchungsdaten, um den Termin durchzuführen. Rechtsgrundlage
+    ist Artikel 6 Absatz 1 Buchstabe b DSGVO.
+  </p>
+
+  <h2>6. Ihre Rechte</h2>
+  <p>Sie haben uns gegenüber jederzeit folgende Rechte hinsichtlich Ihrer personenbezogenen Daten:</p>
+  <ul>
+    <li>Auskunft über die verarbeiteten Daten (Artikel 15 DSGVO)</li>
+    <li>Berichtigung unrichtiger Daten (Artikel 16 DSGVO)</li>
+    <li>Löschung (Artikel 17 DSGVO)</li>
+    <li>Einschränkung der Verarbeitung (Artikel 18 DSGVO)</li>
+    <li>Datenübertragbarkeit (Artikel 20 DSGVO)</li>
+    <li>Widerspruch gegen die Verarbeitung (Artikel 21 DSGVO)</li>
+  </ul>
+  <p>
+    Wenden Sie sich dafür an die oben genannten Kontaktdaten. Unabhängig davon steht Ihnen
+    ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde zu, in der Regel bei der
+    Landesbeauftragten für Datenschutz und Informationsfreiheit Nordrhein-Westfalen,
+    Kavalleriestraße 2–4, 40213 Düsseldorf.
+  </p>
+
+  <h2>7. SSL- und TLS-Verschlüsselung</h2>
+  <p>
+    Diese Seite nutzt aus Sicherheitsgründen eine TLS-Verschlüsselung. Eine verschlüsselte
+    Verbindung erkennen Sie daran, dass die Adresszeile des Browsers mit „https://“ beginnt.
+  </p>
+
+  <h2>8. Änderungen dieser Erklärung</h2>
+  <p>
+    Wir passen diese Datenschutzerklärung an, sobald sich die Rechtslage oder die auf dieser
+    Website eingesetzten Dienste ändern.
+  </p>
+
+  <div class="offen">
+    <b>Vor dem Livegang zu prüfen.</b> Diese Erklärung beschreibt
+    den aktuellen technischen Stand: kein Kontaktformular, keine Cookies, kein Tracking,
+    eingebettete Schriften, Hosting bei GitHub Pages. <b>Sobald sich daran etwas ändert</b> —
+    etwa ein Kontaktformular, eine Karte, ein Analysewerkzeug oder ein Wechsel des Hosters —
+    muss die Erklärung angepasst werden. Sie ist ein sorgfältig erstellter Entwurf und ersetzt
+    keine anwaltliche Prüfung.
+  </div>
+
+  <a class="zurueck" href="erbschaftsimmobilie.html">← Zurück zur Startseite</a>
+
 </main>
 
-<script id="nutzlast" type="text/plain">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</script>
-<script>
-const SPEICHER = 'nagel-vorschau-pw';
-const roh = () => Uint8Array.from(atob(document.getElementById('nutzlast').textContent.trim()), c => c.charCodeAt(0));
+<footer class="wrap">
+  <a href="erbschaftsimmobilie.html">Startseite</a>
+  <a href="impressum.html">Impressum</a>
+  <a href="datenschutz.html">Datenschutz</a>
+</footer>
 
-async function entschluesseln(passwort){
-  const daten = roh();
-  const salz = daten.slice(0,16), iv = daten.slice(16,28), chiffre = daten.slice(28);
-  const basis = await crypto.subtle.importKey('raw', new TextEncoder().encode(passwort), 'PBKDF2', false, ['deriveKey']);
-  const schluessel = await crypto.subtle.deriveKey(
-    {name:'PBKDF2', salt:salz, iterations:300000, hash:'SHA-256'},
-    basis, {name:'AES-GCM', length:256}, false, ['decrypt']);
-  const klar = await crypto.subtle.decrypt({name:'AES-GCM', iv}, schluessel, chiffre);
-  return new TextDecoder().decode(klar);
-}
-
-function anzeigen(html){
-  document.open(); document.write(html); document.close();
-}
-
-async function versuchen(passwort, stillschweigend){
-  try{
-    const html = await entschluesseln(passwort);
-    try{ sessionStorage.setItem(SPEICHER, passwort); }catch(e){}
-    anzeigen(html);
-    return true;
-  }catch(e){
-    if(!stillschweigend){
-      document.getElementById('fehler').textContent = 'Das Passwort stimmt nicht.';
-      document.getElementById('pw').select();
-    }
-    try{ sessionStorage.removeItem(SPEICHER); }catch(e){}
-    return false;
-  }
-}
-
-document.getElementById('formular').addEventListener('submit', async ev => {
-  ev.preventDefault();
-  const knopf = document.getElementById('knopf');
-  knopf.disabled = true; knopf.textContent = 'Wird entschlüsselt …';
-  document.getElementById('fehler').textContent = '';
-  const ok = await versuchen(document.getElementById('pw').value, false);
-  if(!ok){ knopf.disabled = false; knopf.textContent = 'Vorschau öffnen'; }
-});
-
-// Innerhalb einer Sitzung nur einmal fragen
-(async () => {
-  let gemerkt = null;
-  try{ gemerkt = sessionStorage.getItem(SPEICHER); }catch(e){}
-  if(gemerkt) await versuchen(gemerkt, true);
-})();
-</script>
 </body>
 </html>

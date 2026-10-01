@@ -3,97 +3,131 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
-<meta name="googlebot" content="noindex,nofollow">
-<title>Vorschau · Andreas Nagel</title>
+<meta name="robots" content="noindex,nofollow">
+<title>Vorschau der Entwürfe | Andreas Nagel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
 <style>
-  :root{--blau:#0018A8;--tinte:#1a1a1a;--grau:#6b7280;--linie:#dfe3ee;--bg:#f0f2f7}
-  *{box-sizing:border-box}
-  body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);
-       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--tinte)}
-  .karte{width:min(420px,calc(100vw - 40px));background:#fff;border:1px solid var(--linie);
-         border-radius:6px;padding:38px 34px;box-shadow:0 18px 50px rgba(0,24,168,.08)}
-  .kicker{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blau);
-          font-weight:700;margin:0 0 10px}
-  h1{font-size:1.35rem;margin:0 0 6px;line-height:1.3}
-  p{font-size:.92rem;line-height:1.6;color:var(--grau);margin:0 0 22px}
-  label{display:block;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;
-        color:var(--grau);margin:0 0 7px;font-weight:600}
-  input{width:100%;padding:12px 14px;font-size:1rem;border:1px solid var(--linie);
-        border-radius:4px;background:#fbfcfe}
-  input:focus{outline:2px solid var(--blau);outline-offset:1px;border-color:var(--blau)}
-  button{width:100%;margin-top:14px;padding:12px 14px;font-size:.95rem;font-weight:600;
-         color:#fff;background:var(--blau);border:0;border-radius:4px;cursor:pointer}
-  button:disabled{opacity:.55;cursor:progress}
-  .fehler{color:#b3261e;font-size:.85rem;margin:12px 0 0;min-height:1.2em}
-  .fuss{margin:22px 0 0;font-size:.78rem;color:var(--grau)}
+:root{
+  --navy:#1c3a52; --navy-2:#25506f; --ink:#2b241f; --muted:#6b6055;
+  --accent:#9a6b2f; --accent-2:#c99a4f; --accent-soft:#faf1e2;
+  --line:#ece1d1; --bg:#fffcf7; --bg-alt:#f9f1e5;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);line-height:1.7;font-size:17px;background:var(--bg);-webkit-font-smoothing:antialiased}
+.wrap{max-width:820px;margin:0 auto;padding:0 24px}
+h1,h2,h3{font-family:'Fraunces',Georgia,serif;color:var(--navy);line-height:1.22;letter-spacing:-.01em;font-weight:600}
+h1{font-size:2.4rem;margin:0 0 .6rem;color:#fff}
+h2{font-size:1.35rem;margin:0 0 .4rem}
+p{margin:0 0 1.1rem}
+a{color:var(--navy-2)}
+
+header.hero{position:relative;overflow:hidden;background:linear-gradient(160deg,var(--navy) 0%,#122234 100%);color:#fff;padding:56px 0 48px}
+header.hero::before{content:"";position:absolute;top:-120px;right:-100px;width:340px;height:340px;border-radius:50%;
+  background:radial-gradient(circle,var(--accent-2) 0%,transparent 70%);opacity:.35;pointer-events:none}
+header.hero p{color:#dfe8ef;margin:0;max-width:56ch}
+.kicker{text-transform:uppercase;letter-spacing:.14em;font-size:.75rem;color:var(--accent-2);margin:0 0 .9rem;font-weight:600}
+
+main{padding:48px 0 72px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:0 0 40px}
+.card{display:block;border:1px solid var(--line);border-radius:14px;padding:26px 24px;background:#fff;
+  text-decoration:none;color:inherit;transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease}
+.card:hover{border-color:var(--accent-2);transform:translateY(-2px);box-shadow:0 10px 28px rgba(28,58,82,.09)}
+.card .tag{display:inline-block;font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;font-weight:600;
+  color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:4px 11px;margin:0 0 14px}
+.card p{color:var(--muted);font-size:.95rem;margin:0 0 1rem}
+.card .go{font-weight:600;color:var(--navy-2);font-size:.95rem}
+.card .go::after{content:" →"}
+
+.note{background:var(--bg-alt);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;padding:20px 22px;margin:0 0 32px}
+.note h3{font-size:1rem;margin:0 0 .5rem}
+.note ul{margin:0;padding-left:1.15rem;color:var(--muted);font-size:.95rem}
+.note li{margin:0 0 .35rem}
+footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--muted);font-size:.85rem}
 </style>
 </head>
 <body>
-<main class="karte" id="tor">
-  <p class="kicker">Geschützte Vorschau</p>
-  <h1>Entwurfsstand Andreas Nagel</h1>
-  <p>Diese Seite ist noch nicht veröffentlicht. Bitte das Passwort eingeben.</p>
-  <form id="formular">
-    <label for="pw">Passwort</label>
-    <input type="password" id="pw" autocomplete="current-password" autofocus>
-    <button type="submit" id="knopf">Vorschau öffnen</button>
-    <p class="fehler" id="fehler"></p>
-  </form>
-  <p class="fuss">Der Inhalt liegt verschlüsselt auf dem Server und ist für Suchmaschinen gesperrt.</p>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">Entwurfsstand zur Ansicht</p>
+    <h1>Die Startseite und die beiden Schwerpunktseiten</h1>
+    <p>Die Startseite ist der Eingang: Sie sortiert Besucher in die drei Fälle und
+       führt zur Terminbuchung. Die Erbschaftsimmobilie ist die Hauptseite des ersten
+       Monats, auf die später die kürzeren Ratgeber-Artikel einzahlen. Die
+       Scheidungsimmobilie liegt als fertiger Entwurf daneben.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="cards">
+    <a class="card" href="startseite.html">
+      <span class="tag">Startseite</span>
+      <h2>Der Eingang</h2>
+      <p>Wer Andreas über Empfehlung oder Visitenkarte findet, landet hier:
+         die drei Wege, das Alleinstellungsmerkmal, der Ablauf, der Termin.</p>
+      <span class="go">Seite ansehen</span>
+    </a>
+    <a class="card" href="erbschaftsimmobilie.html">
+      <span class="tag">Schwerpunktseite</span>
+      <h2>Erbschaftsimmobilie</h2>
+      <p>Geerbtes Haus in Krefeld verkaufen, auch in der Erbengemeinschaft —
+         von der Bewertung bis zum Notartermin.</p>
+      <span class="go">Seite ansehen</span>
+    </a>
+    <a class="card" href="scheidungsimmobilie.html">
+      <span class="tag">Schwerpunktseite</span>
+      <h2>Scheidungsimmobilie</h2>
+      <p>Das gemeinsame Haus bei einer Trennung: die vier Wege, der Zeitpunkt
+         und die Rolle der Bank.</p>
+      <span class="go">Seite ansehen</span>
+    </a>
+  </div>
+
+  <div class="cards" style="margin-bottom:26px">
+    <a class="card" href="impressum.html">
+      <span class="tag">Rechtliches</span>
+      <h2>Impressum</h2>
+      <p>Pflichtangaben nach § 5 DDG, Erlaubnis nach § 34c GewO.</p>
+      <span class="go">Ansehen</span>
+    </a>
+    <a class="card" href="datenschutz.html">
+      <span class="tag">Rechtliches</span>
+      <h2>Datenschutzerklärung</h2>
+      <p>Keine Cookies, kein Tracking, Schriften lokal eingebettet.</p>
+      <span class="go">Ansehen</span>
+    </a>
+  </div>
+
+  <div class="note">
+    <h3>Was noch offen ist</h3>
+    <ul>
+      <li>Das <strong>Impressum</strong> ist vollständig. Die Angabe zur Aufsichtsbehörde
+          (Kreis Viersen) bitte noch einmal gegen die Erlaubnisurkunde prüfen.</li>
+      <li>Die <strong>Scheidungsimmobilie</strong> ist zur Ansicht freigegeben, gehört aber
+          noch nicht zum beauftragten Umfang des ersten Monats.</li>
+      <li>Die <strong>Terminbuchung ist aktiv</strong> und führt auf Microsoft Bookings,
+          30-Minuten-Erstgespräch, donnerstags 11–13 Uhr.</li>
+      <li>Die aufgeführten <strong>Ratgeber-Artikel dienen nur der Illustration</strong>: Sie zeigen,
+          wie sich die Seite später ausbauen lässt, sind zur Veröffentlichung aber zunächst nicht
+          Bestandteil der Leistung.</li>
+      <li>Die <strong>steuerliche Durchsicht durch Bertram</strong> steht noch aus.</li>
+    </ul>
+  </div>
+
+  <p style="color:var(--muted);font-size:.95rem">
+    Am besten am Rechner lesen. Auf dem Handy funktioniert die Seite ebenfalls,
+    Text und Illustrationen stehen dort untereinander statt nebeneinander.
+  </p>
+
 </main>
 
-<script id="nutzlast" type="text/plain">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</script>
-<script>
-const SPEICHER = 'nagel-vorschau-pw';
-const roh = () => Uint8Array.from(atob(document.getElementById('nutzlast').textContent.trim()), c => c.charCodeAt(0));
+<footer class="wrap">
+  Interner Entwurfsstand, nicht veröffentlicht — die Seiten sind für Suchmaschinen gesperrt.
+</footer>
 
-async function entschluesseln(passwort){
-  const daten = roh();
-  const salz = daten.slice(0,16), iv = daten.slice(16,28), chiffre = daten.slice(28);
-  const basis = await crypto.subtle.importKey('raw', new TextEncoder().encode(passwort), 'PBKDF2', false, ['deriveKey']);
-  const schluessel = await crypto.subtle.deriveKey(
-    {name:'PBKDF2', salt:salz, iterations:300000, hash:'SHA-256'},
-    basis, {name:'AES-GCM', length:256}, false, ['decrypt']);
-  const klar = await crypto.subtle.decrypt({name:'AES-GCM', iv}, schluessel, chiffre);
-  return new TextDecoder().decode(klar);
-}
-
-function anzeigen(html){
-  document.open(); document.write(html); document.close();
-}
-
-async function versuchen(passwort, stillschweigend){
-  try{
-    const html = await entschluesseln(passwort);
-    try{ sessionStorage.setItem(SPEICHER, passwort); }catch(e){}
-    anzeigen(html);
-    return true;
-  }catch(e){
-    if(!stillschweigend){
-      document.getElementById('fehler').textContent = 'Das Passwort stimmt nicht.';
-      document.getElementById('pw').select();
-    }
-    try{ sessionStorage.removeItem(SPEICHER); }catch(e){}
-    return false;
-  }
-}
-
-document.getElementById('formular').addEventListener('submit', async ev => {
-  ev.preventDefault();
-  const knopf = document.getElementById('knopf');
-  knopf.disabled = true; knopf.textContent = 'Wird entschlüsselt …';
-  document.getElementById('fehler').textContent = '';
-  const ok = await versuchen(document.getElementById('pw').value, false);
-  if(!ok){ knopf.disabled = false; knopf.textContent = 'Vorschau öffnen'; }
-});
-
-// Innerhalb einer Sitzung nur einmal fragen
-(async () => {
-  let gemerkt = null;
-  try{ gemerkt = sessionStorage.getItem(SPEICHER); }catch(e){}
-  if(gemerkt) await versuchen(gemerkt, true);
-})();
-</script>
 </body>
 </html>
