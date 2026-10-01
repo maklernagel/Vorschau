@@ -51,10 +51,14 @@ main{padding:48px 0 72px}
 .note li{margin:0 0 .35rem}
 footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--muted);font-size:.85rem}
 
-  /* Auf dem Telefon nichts unter 12 px: Quellenangaben, KI-Hinweise und
-     Marken liefen mit knapp 11 px und waren in der Hand schwer zu lesen. */
+  /* Auf dem Telefon nichts unter 12 px: Quellenangaben, KI-Hinweise, Marken
+     und Tabellenkoepfe liefen mit 9,6 bis 11,5 px und waren in der Hand schwer
+     zu lesen. !important ist hier Absicht: Die Originalregeln sind spezifischer
+     (figure.bild .ki, .way .num, .dossier .tag), und diese Untergrenze soll
+     nichts ueberstimmen koennen. */
   @media (max-width: 640px) {
-    .kicker, .eyebrow, .tag, .quelle, .ki, .num, .summary-label { font-size: .78rem; }
+    .kicker, .eyebrow, .tag, .quelle, .ki, .num, .summary-label,
+    th, small, .fine, .sources { font-size: .78rem !important; }
   }
 </style>
 </head>
