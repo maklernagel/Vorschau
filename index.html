@@ -31,6 +31,10 @@ header.hero p{color:#dfe8ef;margin:0;max-width:56ch}
 .kicker{text-transform:uppercase;letter-spacing:.14em;font-size:.75rem;color:var(--accent-2);margin:0 0 .9rem;font-weight:600}
 
 main{padding:48px 0 72px}
+.gruppe{margin:0 0 14px}
+.gruppe h2{font-size:1.15rem;margin:0 0 6px}
+.gruppe p{color:var(--muted);font-size:.95rem;margin:0;max-width:62ch}
+.gruppe--spaeter{margin-top:8px}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:0 0 40px}
 .card{display:block;border:1px solid var(--line);border-radius:14px;padding:26px 24px;background:#fff;
   text-decoration:none;color:inherit;transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease}
@@ -53,15 +57,50 @@ footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--muted);f
 <header class="hero">
   <div class="wrap">
     <p class="kicker">Entwurfsstand zur Ansicht</p>
-    <h1>Die Startseite und die beiden Schwerpunktseiten</h1>
-    <p>Die Startseite ist der Eingang: Sie sortiert Besucher in die drei Fälle und
-       führt zur Terminbuchung. Die Erbschaftsimmobilie ist die Hauptseite des ersten
-       Monats, auf die später die kürzeren Ratgeber-Artikel einzahlen. Die
-       Scheidungsimmobilie liegt als fertiger Entwurf daneben.</p>
+    <h1>Zwei Entwürfe für denselben Auftritt</h1>
+    <p>Oben der Scroll-Entwurf, bei dem sich die Seite beim Scrollen durch das Haus
+       bewegt. Darunter die ausführliche Fassung mit allen Texten, Tabellen und
+       Rechtsangaben. Beide zeigen dieselben Inhalte, nur in unterschiedlicher Form.</p>
   </div>
 </header>
 
 <main class="wrap">
+
+  <div class="gruppe">
+    <h2>Der Scroll-Entwurf</h2>
+    <p>Die Seite bewegt sich beim Scrollen durch die Räume, der Text erscheint
+       unterwegs. Am besten am Stück von oben nach unten durchscrollen.</p>
+  </div>
+
+  <div class="cards">
+    <a class="card" href="scroll/">
+      <span class="tag">Scroll · Startseite</span>
+      <h2>Der Weg durch das Haus</h2>
+      <p>Der Eingang als Weltflug: von der Ankunft bis zum Termin, mit den
+         drei Anlässen und dem Einzugsgebiet.</p>
+      <span class="go">Seite ansehen</span>
+    </a>
+    <a class="card" href="scroll/erbschaftsimmobilie.html">
+      <span class="tag">Scroll · Schwerpunkt</span>
+      <h2>Erbschaftsimmobilie</h2>
+      <p>Sechs Etappen vom Hauseingang bis zum Dachfenster, dazu die drei Wege
+         aus der Erbengemeinschaft.</p>
+      <span class="go">Seite ansehen</span>
+    </a>
+    <a class="card" href="scroll/scheidungsimmobilie.html">
+      <span class="tag">Scroll · Schwerpunkt</span>
+      <h2>Scheidungsimmobilie</h2>
+      <p>Zwei Seiten einer getrennten Wohnung, zwei Listen, und ein Posten,
+         der auf beiden steht.</p>
+      <span class="go">Seite ansehen</span>
+    </a>
+  </div>
+
+  <div class="gruppe gruppe--spaeter">
+    <h2>Die ausführliche Fassung</h2>
+    <p>Dieselben Themen als klassische Seiten, mit allen Texten, Tabellen,
+       Paragrafen und dem SEO-Gerüst.</p>
+  </div>
 
   <div class="cards">
     <a class="card" href="startseite.html">
