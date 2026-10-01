@@ -32,6 +32,12 @@ a{color:var(--tanne-2)}
 .zurueck{display:inline-block;margin:30px 0 0;font-size:.92rem;text-decoration:none;color:var(--tanne-2)}
 footer{border-top:1px solid var(--linie);margin-top:44px;padding:22px 0 46px;font-size:.85rem;color:var(--stein)}
 footer a{color:var(--stein);margin-right:16px}
+
+  /* Auf dem Telefon nichts unter 12 px. */
+  @media (max-width: 640px) {
+    .kicker, .eyebrow, .tag, .quelle, .ki, .num, .summary-label,
+    th, small, .fine, .sources { font-size: .78rem !important; }
+  }
 </style>
 </head>
 <body>
