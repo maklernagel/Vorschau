@@ -448,6 +448,7 @@
         copyLayer: el.querySelector('[data-sc-world-copy]') || el.querySelector('.sc-world__copy'),
         spacer: el.querySelector('[data-sc-spacer]') || el.querySelector('.sc-world__spacer'),
         seam: 0, segs: [], copies: [], total: 0, top: 0, index: -1, checked: false,
+        letztesK: -1,
         zeigtP: EXPOSE || el.hasAttribute('data-sc-expose')
       };
       var seam = parseFloat(el.getAttribute('data-sc-seam'));
@@ -819,6 +820,30 @@
         }
       }
 
+      // Abstandsschwellen allein reichen nicht: sie sind in Fensterhoehen
+      // gerechnet, die Etappen aber verschieden breit. Bei schmalen Etappen
+      // passen sechs von sieben ins Fenster, und es haengen wieder sechs
+      // Dekoder am Geraet. Also zusaetzlich eine harte Obergrenze: die
+      // laufende Etappe, die davor und die danach. Was weiter weg ist und
+      // trotzdem noch geladen, faellt raus -- das entfernteste zuerst.
+      // Nur beim Etappenwechsel pruefen. In jedem Bild ein Array zu bauen und
+      // zu sortieren kostet mehr, als es spart: die Lage aendert sich erst,
+      // wenn eine neue Etappe laeuft.
+      var belegt = (k === W.letztesK) ? null : [];
+      if (belegt) for (i = 0; i < W.segs.length; i++) {
+        var sg = W.segs[i];
+        if (sg.clip && (sg.clip.ready || sg.clip.loading)) {
+          belegt.push({ clip: sg.clip, fern: Math.abs(i - k) });
+        }
+      }
+      if (belegt) W.letztesK = k;
+      if (belegt && belegt.length > 3) {
+        belegt.sort(function (a, b) { return b.fern - a.fern; });
+        for (i = 0; i < belegt.length - 3; i++) {
+          if (belegt[i].fern >= 2) unloadClip(belegt[i].clip);
+        }
+      }
+
       for (var c = 0; c < W.copies.length; c++) {
         var q = W.copies[c];
         var win = Math.max(q.to - q.from, 0.001);
@@ -838,9 +863,14 @@
         // over a moving world and starts reading as a second page scrolling at a
         // different speed, which is the exact cheapness this mode replaces.
         var wp = clamp01((pr - q.from) / win);
-        q.el.style.opacity = vis.toFixed(3);
-        q.el.style.transform = reduce ? 'none'
+        // Ausserhalb ihres Fensters aendern sich beide Werte nicht mehr, und
+        // das sind fast immer alle ausser einer. Sie trotzdem in jedem Bild zu
+        // schreiben hat je Platte einen Style-Recalc ausgeloest.
+        var vs = vis.toFixed(3);
+        if (vs !== q.lastOp) { q.lastOp = vs; q.el.style.opacity = vs; }
+        var tf = reduce ? 'none'
           : 'translate3d(0,' + ((0.5 - wp) * 4).toFixed(2) + 'vh,0)';
+        if (tf !== q.lastTf) { q.lastTf = tf; q.el.style.transform = tf; }
         var on = vis > 0.5;
         if (on !== (q.state === 1)) { q.state = on ? 1 : 0; q.el.style.pointerEvents = on ? 'auto' : 'none'; }
       }
