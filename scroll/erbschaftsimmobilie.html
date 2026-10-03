@@ -139,21 +139,33 @@
   .teiler {
     position: fixed; inset: 0; z-index: 30; pointer-events: none;
     opacity: 0; transition: opacity 0.6s ease;
+    /* Der Zug des Fingers wandert ueber diese eine Variable in die drei
+       transforms darunter. Vorher schrieb der Zug `left` auf alle drei, also
+       pro Fingerbewegung ein Layout samt Neuzeichnen des 56 px breiten
+       Schattenstreifens, und das ueber einem scrubbenden Video. Jetzt bleibt
+       es ein Verschieben im Compositor. */
+    --teiler-x: 0vw;
   }
   .teiler[data-an="1"] { opacity: 1; }
   .teiler__spalt {
     position: absolute; top: 0; bottom: 0; left: 50%; width: 2px;
-    transform: translateX(-1px);
+    transform: translate3d(var(--teiler-x), 0, 0) translateX(-1px);
     background: linear-gradient(to bottom,
       rgba(244,246,251,0) 0%, rgba(244,246,251,0.75) 18%,
       rgba(244,246,251,0.75) 82%, rgba(244,246,251,0) 100%);
     box-shadow: 0 0 26px 10px rgba(6,9,26,0.55);
+    will-change: transform;
   }
   .teiler__griff {
     position: absolute; top: 50%; left: 50%; width: 46px; height: 46px;
     margin: -23px 0 0 -23px; border-radius: 50%;
     border: 1px solid rgba(244,246,251,0.5);
-    background: rgba(6,9,26,0.55); backdrop-filter: blur(3px);
+    /* Ohne backdrop-filter. Ein Blur hinter diesem Kreis zwingt iOS, das Bild
+       darunter in jedem Bild als Textur zu lesen, und darunter laeuft das
+       Video. Die Deckkraft ersetzt den Blur fuer dasselbe Ergebnis. */
+    background: rgba(6,9,26,0.74);
+    transform: translate3d(var(--teiler-x), 0, 0);
+    will-change: transform;
     cursor: grab;
     /* pan-y, nicht none: der Griff wird quer gezogen, die Seite laeuft
        weiter senkrecht. Mit none verschluckt er jeden Wisch, der auf ihm
@@ -181,10 +193,11 @@
   .teiler--zieht .teiler__spalt { box-shadow: 0 0 40px 16px rgba(6,9,26,0.75); }
   .teiler--zurueck .teiler__spalt,
   .teiler--zurueck .teiler__griff,
-  .teiler--zurueck .teiler__quote { transition: left 0.75s cubic-bezier(.16,1.2,.3,1); }
+  .teiler--zurueck .teiler__quote { transition: transform 0.75s cubic-bezier(.16,1.2,.3,1); }
   .teiler__quote {
     position: absolute; top: calc(50% + 40px); left: 50%;
-    transform: translateX(-50%);
+    transform: translate3d(var(--teiler-x), 0, 0) translateX(-50%);
+    will-change: transform;
     font: 500 0.72rem/1 var(--sc-font-text); letter-spacing: 0.16em;
     text-transform: uppercase; color: var(--sc-ink); white-space: nowrap;
     text-shadow: 0 1px 14px rgba(6,9,26,0.9);
@@ -371,7 +384,6 @@
 
   const teiler  = document.getElementById('teiler');
   const griff   = document.getElementById('griff');
-  const spalt   = document.getElementById('spalt');
   const quote   = document.getElementById('quote');
 
   // ---- Route ------------------------------------------------------------
@@ -415,10 +427,15 @@
     return beste[1];
   }
 
+  let letzterBruch = '';
+
   function setzen(x) {
     const p = Math.min(0.88, Math.max(0.12, x / innerWidth));
-    spalt.style.left = griff.style.left = quote.style.left = (p * 100) + '%';
-    quote.textContent = naechsterBruch(p) + ' abgeteilt';
+    // Eine Variable auf dem Teiler selbst, nicht drei left-Werte: der
+    // Style-Recalc bleibt in diesem Teilbaum und loest kein Layout aus.
+    teiler.style.setProperty('--teiler-x', ((p - 0.5) * 100).toFixed(2) + 'vw');
+    const bruch = naechsterBruch(p) + ' abgeteilt';
+    if (bruch !== letzterBruch) { letzterBruch = bruch; quote.textContent = bruch; }
   }
 
   let zieht = false;
@@ -437,7 +454,8 @@
     teiler.classList.remove('teiler--zieht');
     teiler.classList.add('teiler--zurueck');
     if (gesagt) teiler.classList.add('teiler--gesagt');
-    spalt.style.left = griff.style.left = quote.style.left = '50%';
+    teiler.style.setProperty('--teiler-x', '0vw');
+    letzterBruch = '';
     quote.textContent = '';
   }
   griff.addEventListener('pointerup', (e) => loslassen(e, true));

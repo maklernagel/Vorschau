@@ -139,6 +139,27 @@
 (function (global) {
   'use strict';
 
+  /* ------------------------------------------------------------------------
+     ABWEICHUNG VON DER SKILL-ENGINE (nagel-auftritt, 3. Oktober 2026)
+
+     Die Engine schrieb den Fortschritt in jedem Bild als CSS-Variable: --sc-p
+     auf jeden Akt, --sc-seg und --sc-segp zusaetzlich auf <html>. Weil Custom
+     Properties erben, invalidiert jede dieser Schreibungen den gesamten
+     Teilbaum des Elements, bei <html> also das ganze Dokument. Auf einem
+     iPhone 17 Pro Max laeuft requestAnimationFrame mit 120 Hz: 8,3 ms pro
+     Bild, und ein Teil davon ging fuer Style-Recalc drauf, den niemand
+     brauchte. Gemessen (Chrome, iPhone-Viewport, 6 s Scrollen, Median aus
+     drei Laeufen): Startseite 110 ms Style-Recalc, Erbschaftsseite 538 ms.
+     Ohne diese Schreibungen 12,5 ms und 52 ms, also rund 90 Prozent weniger.
+
+     Geschrieben wird jetzt nur noch auf Zuruf: `data-sc-expose` am Akt oder am
+     Weltflug, oder mount(root, { expose: true }) fuer die ganze Seite. Der
+     Segmentwechsel (--sc-seg) geht weiterhin an <html>, aber nur beim Wechsel
+     selbst, nicht in jedem Bild.
+
+     Wer die Engine aus dem Skill neu kopiert, holt sich das Ruckeln zurueck.
+     ------------------------------------------------------------------------ */
+
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var fineMQ = matchMedia('(hover: hover) and (pointer: fine)');
   var smallMQ = matchMedia('(max-width: 860px)');
@@ -300,6 +321,9 @@
                (opts.lerp > 0 ? clamp(opts.lerp, 0.02, 1) : 0) ||
                0.18;
 
+    // Fortschritt als CSS-Variable nur, wenn eine Seite sie wirklich liest.
+    var EXPOSE = opts.expose === true;
+
     // Every scrub clip on the page lives here, whatever drives it. tick() walks
     // this one list, so an act clip and a worldflight leg get the same playhead.
     function makeClip(v, host) {
@@ -318,6 +342,7 @@
     // ---- collect acts -----------------------------------------------------
     Array.prototype.forEach.call(root.querySelectorAll('[data-sc-act]'), function (el) {
       var device = el.getAttribute('data-sc-act') || 'flow';
+      var zeigtP = EXPOSE || el.hasAttribute('data-sc-expose');
       var pinned = device === 'scrub' || device === 'pin' || device === 'pan';
       var act = {
         el: el,
@@ -326,6 +351,7 @@
         span: parseFloat(el.getAttribute('data-sc-span')) || (pinned ? 1.5 : 0),
         dwell: parseFloat(el.getAttribute('data-sc-dwell')) || 0,
         clipTravel: pinned && el.getAttribute('data-sc-clip-map') === 'travel',
+        zeigtP: zeigtP,
         p: 0, raw: 0, top: 0, height: 0, live: false,
         cues: [], parallax: [], reveals: [], counts: [],
         video: null, seq: null, rail: null
@@ -421,7 +447,8 @@
         stage: el.querySelector('[data-sc-world]') || el.querySelector('.sc-world'),
         copyLayer: el.querySelector('[data-sc-world-copy]') || el.querySelector('.sc-world__copy'),
         spacer: el.querySelector('[data-sc-spacer]') || el.querySelector('.sc-world__spacer'),
-        seam: 0, segs: [], copies: [], total: 0, top: 0, index: -1, checked: false
+        seam: 0, segs: [], copies: [], total: 0, top: 0, index: -1, checked: false,
+        zeigtP: EXPOSE || el.hasAttribute('data-sc-expose')
       };
       var seam = parseFloat(el.getAttribute('data-sc-seam'));
       // A seam wider than the shortest leg would have three clips dissolving at
@@ -798,12 +825,18 @@
       // set of chapter dots are all the same two numbers, and a runtime that
       // ships one of them ships it to every page that uses this mode.
       var cur = W.segs[k];
-      W.el.style.setProperty('--sc-seg', String(k));
-      W.el.style.setProperty('--sc-segp', cur.local.toFixed(4));
-      docEl.style.setProperty('--sc-seg', String(k));
-      docEl.style.setProperty('--sc-segp', cur.local.toFixed(4));
+      // --sc-segp aendert sich in jedem Bild und traf vorher auch <html>, also
+      // das ganze Dokument. Es geht nur noch raus, wenn die Seite es anfordert.
+      if (W.zeigtP) {
+        W.el.style.setProperty('--sc-seg', String(k));
+        W.el.style.setProperty('--sc-segp', cur.local.toFixed(4));
+        docEl.style.setProperty('--sc-segp', cur.local.toFixed(4));
+      }
       if (k !== W.index) {
         W.index = k;
+        // Die Etappennummer bleibt fuer jede Seite lesbar: sie wechselt
+        // sechsmal, nicht hundertzwanzigmal in der Sekunde.
+        docEl.style.setProperty('--sc-seg', String(k));
         try {
           W.el.dispatchEvent(new CustomEvent('sc:waypoint', {
             bubbles: true,
@@ -851,7 +884,9 @@
           a.vp = a.dwell ? dwell(vraw, a.dwell) : vraw;
         }
         a.live = (y > a.top - vh * 1.25) && (y < a.top + a.height + vh * 1.25);
-        a.el.style.setProperty('--sc-p', a.p.toFixed(4));
+        // Nur auf Zuruf. Siehe den Hinweis im Kopf dieser Datei: eine Custom
+        // Property in jedem Bild zu schreiben invalidiert den ganzen Teilbaum.
+        if (a.zeigtP) a.el.style.setProperty('--sc-p', a.p.toFixed(4));
 
         // Fetch earlier than we drive. A 1080p clip is megabytes, and a reader
         // who scrolls briskly will otherwise arrive at a stage that is still

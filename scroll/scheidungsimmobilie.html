@@ -22,7 +22,6 @@
     --sc-accent-ink: #FFFFFF;
     --sc-font-display: "Fraunces", Georgia, serif;
     --sc-font-text:    "Inter", system-ui, sans-serif;
-    --naht: 50%;
   }
   :root { --sc-ink-soft: #5A5F6B; }
 
@@ -30,11 +29,16 @@
 
   /* Die Naht ist die Chrome dieser Seite. Keine Leiste, keine Marke oben:
      die Trennung selbst führt durch die Seite und trägt die Beschriftung. */
+  /* Der Zusammenfall verschiebt die Naht per transform. Eine Custom Property
+     auf <html> gegen left/top zu fahren hiess: pro Bild ein Style-Recalc ueber
+     das ganze Dokument plus ein Layout. Auf einem 120-Hz-Schirm bleiben dafuer
+     8 ms, und die Seite ruckelte massiv. transform laeuft im Compositor. */
   .naht {
-    position: fixed; top: 0; bottom: 0; left: var(--naht); z-index: 45;
+    position: fixed; top: 0; bottom: 0; left: 50%; z-index: 45;
     width: 1px; background: var(--sc-ink); opacity: 0.45;
     pointer-events: none;
     transition: opacity 0.6s ease;
+    will-change: transform;
   }
   .naht__schild {
     position: absolute; top: 50%; left: 0; transform: translate(-50%, -50%);
@@ -175,7 +179,7 @@
 
     /* Die Naht legt sich mit. Der Zusammenfall am Ende schiebt sie dann nach
        oben aus dem Bild statt nach links. */
-    .naht { top: var(--naht); bottom: auto; left: 0; right: 0;
+    .naht { top: 50%; bottom: auto; left: 0; right: 0;
             width: auto; height: 1px; }
     .naht__schild { top: 0; left: 50%; transform: translate(-50%, -50%);
                     gap: 14px; padding: 6px 11px; font-size: 0.6rem;
@@ -233,7 +237,7 @@
   </section>
 
   <!-- Akt 2: der Signature Move. Zwei Listen, ein Posten, der auf beiden steht -->
-  <section data-sc-act="pin" data-sc-span="3.4" id="akt-listen">
+  <section data-sc-act="pin" data-sc-span="3.4" data-sc-expose id="akt-listen">
     <div data-sc-stage>
       <div class="listen">
         <div class="liste">
@@ -286,7 +290,7 @@
   </section>
 
   <!-- Akt 4: der Zusammenfall. Die Naht fährt an den Rand, eine Fläche bleibt -->
-  <section data-sc-act="scrub" data-sc-span="2.8" data-sc-dwell="0.4" id="akt-schluss">
+  <section data-sc-act="scrub" data-sc-span="2.8" data-sc-dwell="0.4" data-sc-expose id="akt-schluss">
     <div data-sc-stage>
       <img class="sc-stage__poster" src="assets/trennung/p04.webp" alt="">
       <video data-sc-scrub data-sc-src="assets/trennung/04.mp4"
@@ -313,11 +317,27 @@
   const naht    = document.getElementById('naht');
   const listen  = document.getElementById('akt-listen');
   const schluss = document.getElementById('akt-schluss');
-  const posten  = [...listen.querySelectorAll('li')];
-  const wohnung = [...listen.querySelectorAll('.posten-haus')];
 
+  // Jeder Posten merkt sich seinen Platz in seiner eigenen Liste einmal. Vorher
+  // wurde er pro Bild aus parentElement.children neu ausgezaehlt, also 10 mal
+  // je Bild eine Liste in ein Array kopiert.
+  const posten = [...listen.querySelectorAll('li')].map((el) => ({
+    el,
+    i: [...el.parentElement.children].indexOf(el),
+    haus: el.classList.contains('posten-haus'),
+    da: false, gestrichen: false
+  }));
+
+  // --sc-p steht als Inline-Style auf dem Akt, die Engine schreibt es dort hin,
+  // und nur auf diesen zwei Akten: sie tragen dafuer data-sc-expose. Ohne das
+  // Attribut schreibt die Engine die Variable gar nicht mehr, siehe den Kopf
+  // von scrollcraft.js.
+  // getComputedStyle() dafuer zu rufen erzwang pro Bild zweimal einen Style-
+  // Recalc samt Layout, und direkt danach schrieben die Zeilen unten Klassen:
+  // Lesen, Schreiben, Lesen, Schreiben, 120 mal in der Sekunde. Genau das ist
+  // das Ruckeln. Der Inline-Wert kostet nichts.
   function fortschritt(el) {
-    return parseFloat(getComputedStyle(el).getPropertyValue('--sc-p')) || 0;
+    return parseFloat(el.style.getPropertyValue('--sc-p')) || 0;
   }
 
   // Der Signature Move: beide Listen füllen sich beim Scrollen, und am Ende
@@ -327,27 +347,71 @@
     const p = fortschritt(listen);
     const proSeite = 5;
     const sichtbar = Math.round(p * (proSeite + 1.6));
-    posten.forEach((li) => {
-      const i = [...li.parentElement.children].indexOf(li);
-      li.classList.toggle('da', i < sichtbar);
-      li.classList.toggle('gestrichen', p > 0.74 && !li.classList.contains('posten-haus'));
-    });
+    const streicht = p > 0.74;
+    for (const q of posten) {
+      // Nur schreiben, wenn sich wirklich etwas aendert. classList.toggle mit
+      // dem Wert, den das Element schon hat, invalidiert den Teilbaum trotzdem.
+      const da = q.i < sichtbar;
+      if (da !== q.da) { q.da = da; q.el.classList.toggle('da', da); }
+      const gestrichen = streicht && !q.haus;
+      if (gestrichen !== q.gestrichen) {
+        q.gestrichen = gestrichen;
+        q.el.classList.toggle('gestrichen', gestrichen);
+      }
+    }
   }
 
   // Der Zusammenfall: die Naht wandert an den linken Rand und verschwindet,
   // die verbliebene Fläche nimmt die ganze Breite.
+  // Senkrecht auf dem Schirm, waagerecht auf dem Telefon: dieselbe Strecke,
+  // andere Achse. Der Breakpoint ist derselbe wie im Stylesheet.
+  const quer = matchMedia('(max-width: 760px)');
+  let nahtAuf = -1, nahtWeg = false;
+
   function schlussSchritt() {
     const p = fortschritt(schluss);
     const auf = Math.max(0, Math.min(1, (p - 0.1) / 0.45));
-    document.documentElement.style.setProperty('--naht', (50 - auf * 50) + '%');
-    naht.classList.toggle('naht--weg', auf > 0.85);
+    if (Math.abs(auf - nahtAuf) > 0.002) {
+      nahtAuf = auf;
+      const d = (-auf * 50).toFixed(2);
+      naht.style.transform = quer.matches
+        ? 'translate3d(0,' + d + 'vh,0)'
+        : 'translate3d(' + d + 'vw,0,0)';
+    }
+    const weg = auf > 0.85;
+    if (weg !== nahtWeg) { nahtWeg = weg; naht.classList.toggle('naht--weg', weg); }
   }
 
-  (function schleife() {
+  // Die Schleife lief bisher von der ersten bis zur letzten Sekunde der Seite,
+  // auch waehrend beide Akte weit ausserhalb des Bildes lagen. Jetzt laeuft sie
+  // nur, solange einer von beiden zu sehen ist, und haelt danach an.
+  let laeuft = false, sichtbar = 0;
+
+  function schleife() {
     listenSchritt();
     schlussSchritt();
-    requestAnimationFrame(schleife);
-  })();
+    if (sichtbar > 0) requestAnimationFrame(schleife);
+    else laeuft = false;
+  }
+
+  new IntersectionObserver((eintraege) => {
+    for (const e of eintraege) sichtbar += e.isIntersecting ? 1 : -1;
+    sichtbar = Math.max(0, sichtbar);
+    // Ein letzter Durchlauf nach dem Verlassen, damit kein halber Zustand
+    // stehen bleibt.
+    if (!sichtbar) { listenSchritt(); schlussSchritt(); return; }
+    if (!laeuft) { laeuft = true; requestAnimationFrame(schleife); }
+  }, { rootMargin: '10% 0px' }).observe(listen);
+
+  new IntersectionObserver((eintraege) => {
+    for (const e of eintraege) sichtbar += e.isIntersecting ? 1 : -1;
+    sichtbar = Math.max(0, sichtbar);
+    if (!sichtbar) { listenSchritt(); schlussSchritt(); return; }
+    if (!laeuft) { laeuft = true; requestAnimationFrame(schleife); }
+  }, { rootMargin: '10% 0px' }).observe(schluss);
+
+  listenSchritt();
+  schlussSchritt();
 </script>
 <script>
   // Diagnose nur auf Zuruf: dieselbe Adresse mit #diag am Ende.

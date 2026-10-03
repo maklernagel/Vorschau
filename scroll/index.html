@@ -364,16 +364,40 @@
   // Signature Move: Jede Tür geht auf, sobald ihr Weg die Mitte des Schirms
   // erreicht, und fällt wieder zu, wenn er sie verlässt. Das Rail fährt
   // seitlich, also entscheidet die Position im Viewport, nicht der Fortschritt.
-  const wege = [...document.querySelectorAll('.weg')];
-  (function schleife() {
+  //
+  // Diese Schleife lief einmal pro Bild über die ganze Seitenlänge und mass,
+  // schrieb, mass, schrieb: getBoundingClientRect, dann ein data-Attribut, auf
+  // das eine 3D-Transform haengt, dann wieder messen. Jede Messung nach einer
+  // Schreibung erzwingt ein Layout. Auf einem 120-Hz-Telefon bleiben 8 ms pro
+  // Bild, und das Scrollen ruckelte massiv. Drei Dinge dagegen: erst alle
+  // Messungen, dann alle Schreibungen; nur schreiben, was sich aendert; und die
+  // Schleife laeuft nur, solange der Akt zu sehen ist.
+  const wegAkt = document.getElementById('akt-wege');
+  const wege = [...document.querySelectorAll('.weg')].map((el) => ({ el, offen: null }));
+
+  let laeuft = false, imBild = false;
+
+  function schritt() {
     const mitte = innerWidth / 2;
-    wege.forEach((el) => {
-      const k = el.getBoundingClientRect();
-      const nah = k.left < mitte + k.width * 0.55 && k.right > mitte - k.width * 0.55;
-      el.dataset.offen = nah ? '1' : '0';
-    });
-    requestAnimationFrame(schleife);
-  })();
+    // Lesephase: nichts schreiben, sonst erzwingt die naechste Messung Layout.
+    for (const w of wege) {
+      const k = w.el.getBoundingClientRect();
+      w.nah = k.left < mitte + k.width * 0.55 && k.right > mitte - k.width * 0.55;
+    }
+    // Schreibphase.
+    for (const w of wege) {
+      if (w.nah !== w.offen) { w.offen = w.nah; w.el.dataset.offen = w.nah ? '1' : '0'; }
+    }
+    if (imBild) requestAnimationFrame(schritt);
+    else laeuft = false;
+  }
+
+  new IntersectionObserver((eintraege) => {
+    imBild = eintraege[0].isIntersecting;
+    if (imBild && !laeuft) { laeuft = true; requestAnimationFrame(schritt); }
+  }, { rootMargin: '15% 0px' }).observe(wegAkt);
+
+  schritt();
 </script>
 <script>
   // Diagnose nur auf Zuruf: dieselbe Adresse mit #diag am Ende.
