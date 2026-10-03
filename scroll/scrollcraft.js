@@ -706,6 +706,24 @@
         .catch(function () { V.loading = false; });
     }
 
+    // Der Gegenpart zu loadClip. Die Engine lud bisher jede Etappe einmal und
+    // gab sie nie wieder her: am Ende der Erbschaftsseite hingen sechs
+    // H.264-Dekoder gleichzeitig am Geraet, obwohl immer nur einer im Bild ist.
+    // Auf einem iPhone ist die Zahl gleichzeitiger Hardware-Dekoder begrenzt;
+    // darueber faellt Safari auf Software zurueck, und das ist das Ruckeln.
+    // Gemessen am Geraet am 3.10.2026: "6 Clips: 6 geladen, 6 bereit, 1 im Bild".
+    function unloadClip(V) {
+      if (!V || (!V.ready && !V.loading)) return;
+      var alt = V.el.src;
+      V.el.removeAttribute('src');
+      try { V.el.load(); } catch (e) {}      // gibt den Dekoder frei
+      if (alt && alt.indexOf('blob:') === 0) { try { URL.revokeObjectURL(alt); } catch (e) {} }
+      V.ready = false; V.loading = false; V.painted = false;
+      V.primed = false; V.priming = false; V.cur = 0; V.stuckAt = 0;
+      V.host.classList.remove('sc-has-clip');
+      V.el.classList.remove('sc-has-clip');
+    }
+
     // ---- image sequence ---------------------------------------------------
     function loadSeq(a) {
       var S = a.seq;
@@ -762,7 +780,13 @@
         // Fetch a leg only while it is within reach. Loading the whole flight up
         // front is tens of megabytes before the first frame paints; loading it
         // on arrival means arriving at a poster.
-        if (s.clip && t > s.c0 - 1.6 && t < s.c1 + 1.6) loadClip(s.clip);
+        // Laden in Reichweite, freigeben weit ausserhalb. Die zwei Schwellen
+        // sind verschieden, sonst laedt und entlaedt dieselbe Etappe im
+        // Wechsel, sobald jemand genau auf der Grenze steht.
+        if (s.clip) {
+          if (t > s.c0 - 1.6 && t < s.c1 + 1.6) loadClip(s.clip);
+          else if (t < s.c0 - 3.2 || t > s.c1 + 3.2) unloadClip(s.clip);
+        }
 
         // Opacity. The incoming leg fades UP over the outgoing one, which holds
         // at full strength underneath until it is completely covered. Fading
@@ -1025,7 +1049,13 @@
     // Split from read() on purpose: seeking is asynchronous and rate-limited by
     // the decoder, while read() must stay cheap enough to run on every scroll
     // event. The lerp here is also what turns a jittery wheel into a glide.
+    var scrubAn = true;
+
     function tick() {
+      // Diagnose-Schalter: liegt er auf aus, wird kein einziger Sprung mehr
+      // angefordert. Der Unterschied in der Bildrate ist dann genau der Anteil,
+      // den das Video am Ruckeln hat. Siehe diag.js.
+      if (!scrubAn) { requestAnimationFrame(tick); return; }
       // Deadband. A phone decoder cannot service a seek every frame, so asking
       // for one costs more than it shows; 20ms of clip is under a frame of
       // footage anyway.
@@ -1233,7 +1263,11 @@
     requestAnimationFrame(tick);
     document.documentElement.classList.add('sc-ready');
 
-    var api = { layout: layout, read: read, acts: acts, worlds: worlds, clips: playheads, lerp: LERP };
+    var api = {
+      layout: layout, read: read, acts: acts, worlds: worlds, clips: playheads, lerp: LERP,
+      // nur fuer die Geraetediagnose, nicht fuer die Seite
+      scrub: function (an) { if (an !== undefined) scrubAn = !!an; return scrubAn; }
+    };
     global.ScrollCraft.instances.push(api);
     return api;
   }
