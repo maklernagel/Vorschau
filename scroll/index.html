@@ -201,7 +201,7 @@
   <!-- 1 Wiedererkennen: die Straße, in der das alles passiert -->
   <section data-sc-act="scrub" data-sc-span="2.6" data-sc-dwell="0.35" id="akt-eins">
     <div data-sc-stage>
-      <img class="sc-stage__poster" src="assets/start/p01.webp" alt="" fetchpriority="high">
+      <img class="sc-stage__poster" src="assets/start/p01.webp" data-sc-lite="assets/start/l01.webp" data-sc-lite-mobile="assets/start/l01-m.webp" alt="" fetchpriority="high">
       <video data-sc-scrub data-sc-src="assets/start/01.mp4"
              data-sc-src-mobile="assets/start/01-m.mp4" playsinline muted></video>
       <div class="plane"></div>
@@ -342,6 +342,8 @@
 
 </main>
 
+<!-- Die Weiche entscheidet vor dem Motor, ob Clips geholt werden. Siehe weiche.js. -->
+<script src="weiche.js"></script>
 <script src="scrollcraft.js"></script>
 <script>
   // Die Spannweiten sind in Fensterhoehen gerechnet, also auf jedem Geraet
@@ -398,6 +400,13 @@
   }, { rootMargin: '15% 0px' }).observe(wegAkt);
 
   schritt();
+</script>
+<script>
+  // Diagnose nur auf Zuruf: dieselbe Adresse mit #diag am Ende.
+  if (location.hash.indexOf('diag') > -1) {
+    var d = document.createElement('script'); d.src = 'diag.js';
+    document.body.appendChild(d);
+  }
 </script>
 </body>
 </html>

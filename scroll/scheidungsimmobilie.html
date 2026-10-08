@@ -292,7 +292,7 @@
   <!-- Akt 4: der Zusammenfall. Die Naht fährt an den Rand, eine Fläche bleibt -->
   <section data-sc-act="scrub" data-sc-span="2.8" data-sc-dwell="0.4" data-sc-expose id="akt-schluss">
     <div data-sc-stage>
-      <img class="sc-stage__poster" src="assets/trennung/p04.webp" alt="">
+      <img class="sc-stage__poster" src="assets/trennung/p04.webp" data-sc-lite="assets/trennung/l04.webp" data-sc-lite-mobile="assets/trennung/l04-m.webp" alt="">
       <video data-sc-scrub data-sc-src="assets/trennung/04.mp4"
              data-sc-src-mobile="assets/trennung/04-m.mp4" playsinline muted></video>
       <div class="sc-scrim"></div>
@@ -310,6 +310,8 @@
 
 </main>
 
+<!-- Die Weiche entscheidet vor dem Motor, ob Clips geholt werden. Siehe weiche.js. -->
+<script src="weiche.js"></script>
 <script src="scrollcraft.js"></script>
 <script>
   ScrollCraft.mount(document);
@@ -412,6 +414,13 @@
 
   listenSchritt();
   schlussSchritt();
+</script>
+<script>
+  // Diagnose nur auf Zuruf: dieselbe Adresse mit #diag am Ende.
+  if (location.hash.indexOf('diag') > -1) {
+    var d = document.createElement('script'); d.src = 'diag.js';
+    document.body.appendChild(d);
+  }
 </script>
 </body>
 </html>

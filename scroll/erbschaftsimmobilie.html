@@ -278,27 +278,27 @@
 
   <div data-sc-world>
     <div data-sc-segment data-sc-w="1.4" data-sc-linger="0.12" data-sc-waypoint="Ankunft">
-      <img class="sc-world__poster" src="assets/erbe/p01.webp" alt="" fetchpriority="high">
+      <img class="sc-world__poster" src="assets/erbe/p01.webp" data-sc-lite="assets/erbe/l01.webp" data-sc-lite-mobile="assets/erbe/l01-m.webp" alt="" fetchpriority="high">
       <video data-sc-src="assets/erbe/01.mp4" data-sc-src-mobile="assets/erbe/01-m.mp4"></video>
     </div>
     <div data-sc-segment data-sc-w="1.4" data-sc-linger="0.12" data-sc-waypoint="Flur">
-      <img class="sc-world__poster" src="assets/erbe/p02.webp" alt="" decoding="async" fetchpriority="low">
+      <img class="sc-world__poster" src="assets/erbe/p02.webp" data-sc-lite="assets/erbe/l02.webp" data-sc-lite-mobile="assets/erbe/l02-m.webp" alt="" decoding="async" fetchpriority="low">
       <video data-sc-src="assets/erbe/02.mp4" data-sc-src-mobile="assets/erbe/02-m.mp4"></video>
     </div>
     <div data-sc-segment data-sc-w="1.4" data-sc-linger="0.3" data-sc-waypoint="Wohnzimmer">
-      <img class="sc-world__poster" src="assets/erbe/p03.webp" alt="" decoding="async" fetchpriority="low">
+      <img class="sc-world__poster" src="assets/erbe/p03.webp" data-sc-lite="assets/erbe/l03.webp" data-sc-lite-mobile="assets/erbe/l03-m.webp" alt="" decoding="async" fetchpriority="low">
       <video data-sc-src="assets/erbe/03.mp4" data-sc-src-mobile="assets/erbe/03-m.mp4"></video>
     </div>
     <div data-sc-segment data-sc-w="1.4" data-sc-linger="0.12" data-sc-waypoint="Treppe">
-      <img class="sc-world__poster" src="assets/erbe/p04.webp" alt="" decoding="async" fetchpriority="low">
+      <img class="sc-world__poster" src="assets/erbe/p04.webp" data-sc-lite="assets/erbe/l04.webp" data-sc-lite-mobile="assets/erbe/l04-m.webp" alt="" decoding="async" fetchpriority="low">
       <video data-sc-src="assets/erbe/04.mp4" data-sc-src-mobile="assets/erbe/04-m.mp4"></video>
     </div>
     <div data-sc-segment data-sc-w="1.4" data-sc-linger="0.12" data-sc-waypoint="Dachboden">
-      <img class="sc-world__poster" src="assets/erbe/p05.webp" alt="" decoding="async" fetchpriority="low">
+      <img class="sc-world__poster" src="assets/erbe/p05.webp" data-sc-lite="assets/erbe/l05.webp" data-sc-lite-mobile="assets/erbe/l05-m.webp" alt="" decoding="async" fetchpriority="low">
       <video data-sc-src="assets/erbe/05.mp4" data-sc-src-mobile="assets/erbe/05-m.mp4"></video>
     </div>
     <div data-sc-segment data-sc-w="1.4" data-sc-linger="0.12" data-sc-waypoint="Fenster">
-      <img class="sc-world__poster" src="assets/erbe/p06.webp" alt="" decoding="async" fetchpriority="low">
+      <img class="sc-world__poster" src="assets/erbe/p06.webp" data-sc-lite="assets/erbe/l06.webp" data-sc-lite-mobile="assets/erbe/l06-m.webp" alt="" decoding="async" fetchpriority="low">
       <video data-sc-src="assets/erbe/06.mp4" data-sc-src-mobile="assets/erbe/06-m.mp4"></video>
     </div>
   </div>
@@ -368,6 +368,8 @@
 
 <p class="hinweis">Entwurf für Andreas Nagel, September 2026. Nicht veröffentlicht.</p>
 
+<!-- Die Weiche entscheidet vor dem Motor, ob Clips geholt werden. Siehe weiche.js. -->
+<script src="weiche.js"></script>
 <script src="scrollcraft.js"></script>
 <script>
   const ETAPPEN = ['Ankunft', 'Flur', 'Wohnzimmer', 'Treppe', 'Dachboden', 'Fenster'];
@@ -463,6 +465,13 @@
   // schickt pointercancel statt pointerup. Dann faellt alles zurueck, ohne dass
   // der Nachsatz erscheint: gesagt hat der Nutzer damit nichts.
   griff.addEventListener('pointercancel', (e) => loslassen(e, false));
+</script>
+<script>
+  // Diagnose nur auf Zuruf: dieselbe Adresse mit #diag am Ende.
+  if (location.hash.indexOf('diag') > -1) {
+    var d = document.createElement('script'); d.src = 'diag.js';
+    document.body.appendChild(d);
+  }
 </script>
 </body>
 </html>

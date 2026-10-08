@@ -161,6 +161,18 @@
      ------------------------------------------------------------------------ */
 
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* PERFORMANCE-WEICHE (7. Oktober 2026), entschieden in weiche.js.
+     "lite" heisst: kein Clip wird geholt, die Standbilder tragen die Seite,
+     Text und Ueberblendungen bleiben vollstaendig. Getrennt von `reduce`
+     gehalten, weil das zwei verschiedene Gruende sind: reduce ist eine
+     Nutzerentscheidung und nimmt auch die Verschiebungen weg, lite ist eine
+     Geraetemessung und nimmt nur das Video. Modulweit, weil loadClip und tick
+     es lesen; die globale Marke wird bei mount() und bei jedem Umschalten
+     uebernommen, damit die Ladereihenfolge der zwei Dateien keine Rolle
+     spielt. Ohne weiche.js ist liteAn immer false und nichts aendert sich. */
+  var liteAn = global.SCROLLCRAFT_LITE === true;
+
   var fineMQ = matchMedia('(hover: hover) and (pointer: fine)');
   var smallMQ = matchMedia('(max-width: 860px)');
   var coarse = matchMedia('(hover: none) and (pointer: coarse)').matches;
@@ -653,7 +665,10 @@
     function loadClip(V) {
       // Under reduced motion the clip is never fetched. The poster holds the
       // frame and the copy still cues, so the page reads without the decode.
-      if (reduce || !V || V.loading) return;
+      // Dasselbe gilt fuer die leichte Fassung der Performance-Weiche: dort
+      // ist genau dieses Nicht-Holen der ganze Unterschied, 0,4 MB Standbilder
+      // statt 5,8 MB Video und kein Dekoder am Geraet.
+      if (reduce || liteAn || !V || V.loading) return;
       var src = V.el.getAttribute('data-sc-src') ||
                 (isMobile() && V.el.getAttribute('data-sc-src-mobile')) ||
                 V.el.currentSrc || V.el.src;
@@ -686,6 +701,14 @@
           // alone flashes an empty stage.
           var reveal = function () {
             if (V.painted) return;
+            // Ein Clip, der inzwischen entladen wurde, darf sein Standbild
+            // nicht verdecken: dann liegt ein quellenloses <video> bei
+            // Deckkraft 1 ueber einem Poster bei 0, und die Etappe ist leer.
+            // Genau das passierte, seit die Engine Clips wieder freigibt -- der
+            // Zeitgeber unten lief weiter und meldete 2,5 s spaeter "gemalt"
+            // fuer einen Clip, den es nicht mehr gab. Sichtbar wurde es als
+            // "6 gemalt, 3 geladen" in der Pruefung der Weiche am 7.10.2026.
+            if (!V.el.src) return;
             V.painted = true;
             V.host.classList.add('sc-has-clip');
             V.el.classList.add('sc-has-clip');
@@ -698,7 +721,7 @@
           // act is fine because by then the reader has touched the screen and
           // the decoder is live. Reveal on a timer as well. A stage that is
           // briefly blank is a smaller fault than one that never shows its clip.
-          setTimeout(reveal, 2500);
+          V.zeitgeber = setTimeout(reveal, 2500);
           V.el.preload = 'auto';
           V.el.muted = true;            // as a property, not only an attribute
           V.el.playsInline = true;
@@ -715,6 +738,9 @@
     // Gemessen am Geraet am 3.10.2026: "6 Clips: 6 geladen, 6 bereit, 1 im Bild".
     function unloadClip(V) {
       if (!V || (!V.ready && !V.loading)) return;
+      // Erst den Zeitgeber, dann die Quelle: sonst meldet ein noch laufender
+      // reveal() den Clip nachtraeglich als gemalt. Siehe reveal() oben.
+      if (V.zeitgeber) { clearTimeout(V.zeitgeber); V.zeitgeber = 0; }
       var alt = V.el.src;
       V.el.removeAttribute('src');
       try { V.el.load(); } catch (e) {}      // gibt den Dekoder frei
@@ -950,6 +976,12 @@
           if (a.video) loadVideo(a);
           if (a.seq) loadSeq(a);
         }
+        // Ein Akt gab seinen Clip bisher nie frei: er hat genau einen, und ihn
+        // beim Zurueckscrollen erneut zu holen kostet mehr als der Dekoder.
+        // In der leichten Fassung kommt er nicht wieder, also kann er weg,
+        // sobald der Akt aus dem Bild ist. Betrifft nur den Fall, dass die
+        // Weiche mitten im Scrollen umgeschaltet hat -- sonst ist nichts da.
+        if (liteAn && a.video && !a.live) unloadClip(a.video);
         if (a.live && a.seq) drawSeq(a);
         if (a.video) { a.video.live = a.live; if (a.video.ready) a.video.target = a.vp; }
 
@@ -1293,10 +1325,37 @@
     requestAnimationFrame(tick);
     document.documentElement.classList.add('sc-ready');
 
+    // Eine spaet gefallene Entscheidung der Weiche nachziehen: liegt die
+    // globale Marke, wenn mount() laeuft, gilt sie ab dem ersten Bild.
+    if (global.SCROLLCRAFT_LITE === true) liteAn = true;
+
     var api = {
       layout: layout, read: read, acts: acts, worlds: worlds, clips: playheads, lerp: LERP,
-      // nur fuer die Geraetediagnose, nicht fuer die Seite
-      scrub: function (an) { if (an !== undefined) scrubAn = !!an; return scrubAn; }
+      // Haelt das Scrubben an, ohne etwas zu entladen: das sichtbare Bild
+      // bleibt stehen, wo es ist. Fuer die Geraetediagnose (diag.js) und als
+      // erste Stufe der Performance-Weiche, die genau das braucht -- Last weg
+      // ohne Bildsprung.
+      scrub: function (an) { if (an !== undefined) scrubAn = !!an; return scrubAn; },
+      // Zweite Stufe: ab hier wird kein Clip mehr geholt, und was geladen und
+      // gerade nicht im Bild ist, gibt seinen Dekoder zurueck. Der sichtbare
+      // Clip bleibt stehen und verschwindet erst, wenn er aus dem Bild
+      // scrollt -- nach vorn abbauen, nie zurueck: ein Wechsel aufs Standbild
+      // unter laufendem Clip waere ein Bildsprung, weil das Standbild das
+      // erste Bild des Clips ist und der Clip gerade in der Mitte laeuft.
+      lite: function (an) {
+        if (an === undefined) return liteAn;
+        liteAn = !!an;
+        global.SCROLLCRAFT_LITE = liteAn;
+        if (liteAn) {
+          scrubAn = false;
+          for (var i = 0; i < playheads.length; i++) {
+            if (!playheads[i].live) unloadClip(playheads[i]);
+          }
+        } else {
+          scrubAn = true;
+        }
+        return liteAn;
+      }
     };
     global.ScrollCraft.instances.push(api);
     return api;
