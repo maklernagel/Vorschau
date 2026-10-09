@@ -460,6 +460,8 @@
         copyLayer: el.querySelector('[data-sc-world-copy]') || el.querySelector('.sc-world__copy'),
         spacer: el.querySelector('[data-sc-spacer]') || el.querySelector('.sc-world__spacer'),
         seam: 0, segs: [], copies: [], total: 0, top: 0, index: -1, checked: false,
+        // Die Einheit, in der die Spur wirklich steht. layout() misst sie.
+        vh: 0,
         letztesK: -1,
         zeigtP: EXPOSE || el.hasAttribute('data-sc-expose')
       };
@@ -600,10 +602,21 @@
       // the sum of the leg weights plus one viewport: without that extra screen
       // the track runs out at the moment the last leg reaches p=1, so the last
       // leg's final second is a place the reader can never actually stop.
-      // Set in pixels, not vh, because .sc-world is sized in svh on phones and a
-      // vh/svh mismatch would put the track and the stage on different rulers.
+      //
+      // Die Spur steht in CSS-vh, nicht in Pixeln aus innerHeight. Auf dem
+      // Telefon aendert die Adressleiste innerHeight staendig, 100vh aber
+      // nicht. Vorher wurde die Spur einmal in Pixeln eingefroren, waehrend
+      // readWorld weiter durch das wandernde innerHeight teilte -- und weil in
+      // der Spurlaenge der Faktor (total + 1) steckt, wurde aus 10 Prozent
+      // Hoehenunterschied fast eine ganze Bildschirmhoehe: auf der
+      // Erbschaftsseite 931 px gemessen, in denen das Scrollen nichts mehr
+      // bewegte. Andreas hat genau das gemeldet ("nach dem Dachfenster scrollt
+      // es weiter"). W.vh haelt die Einheit fest, in der die Spur wirklich
+      // steht; readWorld rechnet mit derselben.
       worlds.forEach(function (W) {
-        if (W.spacer) W.spacer.style.height = Math.round((W.total + 1) * vh) + 'px';
+        if (!W.spacer) return;
+        W.spacer.style.height = ((W.total + 1) * 100) + 'vh';
+        W.vh = W.spacer.getBoundingClientRect().height / (W.total + 1);
       });
       acts.forEach(function (a) {
         var r = a.el.getBoundingClientRect();
@@ -675,12 +688,20 @@
       if (isMobile() && V.el.getAttribute('data-sc-src-mobile')) src = V.el.getAttribute('data-sc-src-mobile');
       if (!src) return;
       V.loading = true;
+      // Die Nummer dieses Ladevorgangs. unloadClip zaehlt sie hoch, ein zweites
+      // loadClip ebenfalls: so erkennt der Rueckweg des fetch unten, dass er
+      // niemandem mehr gehoert. Ohne das haengte ein spaet zurueckkehrender
+      // Blob seine Quelle an ein Element, das die Engine laengst fuer leer
+      // hielt, und der Zeitgeber blendete das Standbild darunter weg.
+      var lauf = V.lauf = (V.lauf || 0) + 1;
       fetch(src).then(function (r) { if (!r.ok) throw new Error(r.status); return r.blob(); })
         .then(function (blob) {
+          if (lauf !== V.lauf) return;
           // Listeners and preload BEFORE src. Assigning src starts the load, so
           // attaching afterwards and then calling load() restarts it and aborts
           // the first request (visible as ERR_ABORTED on the blob URL).
           V.el.addEventListener('loadedmetadata', function () {
+            if (lauf !== V.lauf) return;
             V.ready = true;
             // Force one seek even when the target is already 0. The reveal is
             // gated on a 'seeked' event, and the raf loop only seeks when the
@@ -695,12 +716,13 @@
             // Power Mode, data saver), and there the rejection is harmless: the
             // gesture listeners below retry on the next real touch.
             primeClip(V);
-          });
+          }, { once: true });
           // Reveal only once a real frame has painted. iOS keeps a seeked-but-
           // never-played muted video blank, so hiding the poster on metadata
           // alone flashes an empty stage.
+          var versuche = 0;
           var reveal = function () {
-            if (V.painted) return;
+            if (V.painted || lauf !== V.lauf) return;
             // Ein Clip, der inzwischen entladen wurde, darf sein Standbild
             // nicht verdecken: dann liegt ein quellenloses <video> bei
             // Deckkraft 1 ueber einem Poster bei 0, und die Etappe ist leer.
@@ -709,6 +731,18 @@
             // fuer einen Clip, den es nicht mehr gab. Sichtbar wurde es als
             // "6 gemalt, 3 geladen" in der Pruefung der Weiche am 7.10.2026.
             if (!V.el.src) return;
+            // Eine Quelle allein war als Nachweis zu wenig. Wer quer durch die
+            // Seite springt, laesst Laden und Freigeben derselben Etappe
+            // ueberlappen; danach hing eine Blob-Adresse am Element, von der
+            // nie etwas ankam (readyState 0), der Zeitgeber meldete trotzdem
+            // "gemalt" und die Etappe war schwarz. Am 9.10.2026 auf der
+            // Erbschaftsseite reproduziert: drei von sechs Etappen leer, die
+            // sichtbare darunter. Ohne Daten also lieber noch warten; das
+            // Standbild haelt die Stelle, und dafuer ist es da.
+            if (V.el.readyState < 1) {
+              if (++versuche < 4) V.zeitgeber = setTimeout(reveal, 1200);
+              return;
+            }
             V.painted = true;
             V.host.classList.add('sc-has-clip');
             V.el.classList.add('sc-has-clip');
@@ -737,10 +771,22 @@
     // darueber faellt Safari auf Software zurueck, und das ist das Ruckeln.
     // Gemessen am Geraet am 3.10.2026: "6 Clips: 6 geladen, 6 bereit, 1 im Bild".
     function unloadClip(V) {
-      if (!V || (!V.ready && !V.loading)) return;
+      if (!V) return;
+      // Laufende fetches verwaisen lassen, bevor irgendetwas anderes passiert.
+      // Siehe den Generationszaehler in loadClip.
+      V.lauf = (V.lauf || 0) + 1;
       // Erst den Zeitgeber, dann die Quelle: sonst meldet ein noch laufender
       // reveal() den Clip nachtraeglich als gemalt. Siehe reveal() oben.
       if (V.zeitgeber) { clearTimeout(V.zeitgeber); V.zeitgeber = 0; }
+      // Frueher stieg der Aufraeumer hier aus, wenn weder ready noch loading
+      // stand. Genau dann konnte aber eine Quelle am Element haengen, die ein
+      // verspaeteter fetch hinterlassen hatte, und sie blieb liegen.
+      if (!V.ready && !V.loading && !V.el.getAttribute('src')) {
+        V.painted = false;
+        V.host.classList.remove('sc-has-clip');
+        V.el.classList.remove('sc-has-clip');
+        return;
+      }
       var alt = V.el.src;
       V.el.removeAttribute('src');
       try { V.el.load(); } catch (e) {}      // gibt den Dekoder frei
@@ -791,7 +837,10 @@
     function readWorld(W) {
       if (!W.segs.length) return;
       var S = W.seam;
-      var t = clamp((y - W.top) / Math.max(vh, 1), 0, W.total);
+      // Durch W.vh teilen, nicht durch vh: die Spur ist in CSS-vh gesetzt, und
+      // eine Adressleiste, die innerHeight verschiebt, darf die Zuordnung von
+      // Scrollstelle zu Etappe nicht verschieben. Siehe layout().
+      var t = clamp((y - W.top) / Math.max(W.vh || vh, 1), 0, W.total);
       var pr = t / W.total;
       var i, s;
 

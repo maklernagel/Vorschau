@@ -197,9 +197,37 @@
   }
 
   /* Bewertungsschnitt neben dem Terminknopf. */
-  .note-klein{display:block;margin-top:.9em;font-family:var(--sc-font-text);
-    font-size:.8rem;color:var(--sc-ink-soft)}
-  .note-klein a{color:var(--sc-ink-soft);text-underline-offset:3px}
+  /* Die Bewertung stand als graue Kleinschrift unter dem Knopf und ging neben
+     ihm unter; Andreas hat am 9.10. gefragt, ob sie sichtbarer werden kann.
+     Jetzt eine eigene Zeile in Textfarbe: Sterne, die Note gross, die Herkunft
+     klein darunter. Weiterhin statisch gesetzt und ohne Widget, sonst laedt
+     fremdes JavaScript und die Zusage "kein Tracking" faellt. */
+  .bewertung {
+    display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 .5em;
+    margin: 1.15em 0 0; font-family: var(--sc-font-text);
+    font-size: .92rem;
+    /* Geerbt, nicht aus den Tokens: die Scheidungsseite ist eine helle Seite
+       mit dunklem --sc-ink, ihr Schlussakt aber dunkel und sein Text deshalb
+       von Hand hell gesetzt. Mit var(--sc-ink) stand die Bewertung dort
+       dunkel auf dunkel, gemessener Kontrast 1,95:1. */
+    color: inherit;
+  }
+  .bewertung__sterne { font-size: 1rem; letter-spacing: .1em; }
+  .bewertung b { font-size: 1.3rem; font-weight: 600; line-height: 1; }
+  .bewertung__quelle { flex-basis: 100%; margin-top: .25em;
+    font-size: .78rem; color: inherit; opacity: .74; }
+  .bewertung__quelle a { color: inherit; text-underline-offset: 3px; }
+  /* Eine echte Bewertung, woertlich und mit Datum. Umschreiben waere
+     angreifbar, deshalb steht sie samt Eigenheiten des Verfassers da. */
+  .stimme {
+    margin: .85em 0 0; max-width: 46ch;
+    font-family: var(--sc-font-text); font-size: .88rem; line-height: 1.5;
+    color: inherit;
+  }
+  .stimme cite {
+    display: block; margin-top: .35em; font-style: normal;
+    font-size: .74rem; color: inherit; opacity: .74;
+  }
 </style>
 </head>
 <body>
@@ -302,7 +330,15 @@
           <p class="satz">Wer gemeinsam verkauft, erzielt in aller Regel mehr als bei
             einer Versteigerung. Und beide Seiten können mit dem Ergebnis planen.</p>
           <a class="termin" href="https://outlook.office.com/bookwithme/user/42450101008e4181b971c3a67ca974ea@Nagelverhandelt.onmicrosoft.com/meetingtype/ysZKRUtl8UOYFehYCOtjdg2?bookingcode=baa503d6-192f-48c1-934c-13e971a4608c&amp;anonymous&amp;ep=mlink" target="_blank" rel="noopener">Erstgespräch buchen</a>
-      <span class="note-klein">5,0 von 5 aus 50 Bewertungen auf <a href="https://www.provenexpert.com/de-de/andreas-nagel/" target="_blank" rel="noopener">ProvenExpert</a></span>
+          <p class="bewertung">
+            <span class="bewertung__sterne" aria-hidden="true">★★★★★</span>
+            <b>5,0</b> von 5
+            <span class="bewertung__quelle">aus 50 Bewertungen auf
+              <a href="https://www.provenexpert.com/de-de/andreas-nagel/" target="_blank" rel="noopener">ProvenExpert</a></span>
+          </p>
+          <blockquote class="stimme">„Außerordentlich zuvorkommend auch in herausfordernden Situationen.
+            Fast schon bedauerlich, das ich nur 1 Objekt zu verkaufen hatte.“
+            <cite>15.12.2024</cite></blockquote>
         </div>
       </div>
     </div>

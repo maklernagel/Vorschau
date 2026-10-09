@@ -181,9 +181,37 @@
   }
 
   /* Bewertungsschnitt neben dem Terminknopf. */
-  .note-klein{display:block;margin-top:.9em;font-family:var(--sc-font-text);
-    font-size:.8rem;color:var(--sc-ink-soft)}
-  .note-klein a{color:var(--sc-ink-soft);text-underline-offset:3px}
+  /* Die Bewertung stand als graue Kleinschrift unter dem Knopf und ging neben
+     ihm unter; Andreas hat am 9.10. gefragt, ob sie sichtbarer werden kann.
+     Jetzt eine eigene Zeile in Textfarbe: Sterne, die Note gross, die Herkunft
+     klein darunter. Weiterhin statisch gesetzt und ohne Widget, sonst laedt
+     fremdes JavaScript und die Zusage "kein Tracking" faellt. */
+  .bewertung {
+    display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 .5em;
+    margin: 1.15em 0 0; font-family: var(--sc-font-text);
+    font-size: .92rem;
+    /* Geerbt, nicht aus den Tokens: die Scheidungsseite ist eine helle Seite
+       mit dunklem --sc-ink, ihr Schlussakt aber dunkel und sein Text deshalb
+       von Hand hell gesetzt. Mit var(--sc-ink) stand die Bewertung dort
+       dunkel auf dunkel, gemessener Kontrast 1,95:1. */
+    color: inherit;
+  }
+  .bewertung__sterne { font-size: 1rem; letter-spacing: .1em; }
+  .bewertung b { font-size: 1.3rem; font-weight: 600; line-height: 1; }
+  .bewertung__quelle { flex-basis: 100%; margin-top: .25em;
+    font-size: .78rem; color: inherit; opacity: .74; }
+  .bewertung__quelle a { color: inherit; text-underline-offset: 3px; }
+  /* Eine echte Bewertung, woertlich und mit Datum. Umschreiben waere
+     angreifbar, deshalb steht sie samt Eigenheiten des Verfassers da. */
+  .stimme {
+    margin: .85em 0 0; max-width: 46ch;
+    font-family: var(--sc-font-text); font-size: .88rem; line-height: 1.5;
+    color: inherit;
+  }
+  .stimme cite {
+    display: block; margin-top: .35em; font-style: normal;
+    font-size: .74rem; color: inherit; opacity: .74;
+  }
 </style>
 </head>
 <body>
@@ -219,7 +247,7 @@
       <div class="grund"><img src="assets/start/02.webp" alt="" loading="lazy" decoding="async" fetchpriority="low"></div>
       <div class="plane"></div>
       <div class="sc-copy sc-copy--lead" data-sc-cue="0 1 0 0">
-        <h2>Ein Todesfall. Eine Trennung.<br>Ein Umzug ins Alter.</h2>
+        <h2>Ein Todesfall. Eine Trennung.<br>Ein Haus, das zu groß geworden ist.</h2>
       </div>
       <div class="sc-copy sc-copy--trail" data-sc-cue="0.34 1">
         <p class="satz">Drei Anlässe, ein gemeinsamer Nenner: Über die Immobilie
@@ -239,11 +267,10 @@
       </figure>
     </div>
     <div class="unterschied__text" data-sc-in data-sc-stagger="80">
-      <h2>Das Finanzamt erkennt meine Bewertungen an.</h2>
+      <h2>Das Finanzamt erkennt in vielen Fällen meine Bewertungen an.</h2>
       <p class="satz">Ich komme aus dem Bankgeschäft. Im Erbfall entscheidet das
         darüber, ob die Steuer auf einem realistischen Wert beruht oder auf einer
-        Schätzung, gegen die sich die Familie hinterher wehren muss.
-        <span class="quelle">Formulierung noch mit Andreas abzustimmen</span></p>
+        Schätzung, gegen die sich die Familie hinterher wehren muss.</p>
     </div>
   </section>
 
@@ -281,8 +308,8 @@
             <rect class="blatt" x="8" y="8" width="44" height="86"/>
           </svg>
           <h3>Geerbt</h3>
-          <p>Erbengemeinschaft, Wert zum Todestag, Fristen. Und die Frage, wie vier
-            Erben zu einer Entscheidung kommen.</p>
+          <p>Erbengemeinschaft, Wert zum Todestag, Fristen. Und die Frage, wie
+            auch mehrere Erben zu einer Entscheidung kommen.</p>
         </a>
 
         <a class="weg" href="scheidungsimmobilie.html">
@@ -309,7 +336,7 @@
 
         <div class="rail__ende">
           <p class="satz">Sie müssen sich nicht festlegen. Im Gespräch stellt sich
-            meistens ohnehin heraus, welcher Fall es wirklich ist.</p>
+            heraus, welche Lösung für Sie die richtige ist.</p>
         </div>
       </div>
     </div>
@@ -326,7 +353,15 @@
           <p class="satz">Dreißig Minuten, kostenfrei und unverbindlich, auch dann,
             wenn am Ende kein Verkauf steht.</p>
           <a class="termin" href="https://outlook.office.com/bookwithme/user/42450101008e4181b971c3a67ca974ea@Nagelverhandelt.onmicrosoft.com/meetingtype/ysZKRUtl8UOYFehYCOtjdg2?bookingcode=baa503d6-192f-48c1-934c-13e971a4608c&amp;anonymous&amp;ep=mlink" target="_blank" rel="noopener">Erstgespräch buchen</a>
-      <span class="note-klein">5,0 von 5 aus 50 Bewertungen auf <a href="https://www.provenexpert.com/de-de/andreas-nagel/" target="_blank" rel="noopener">ProvenExpert</a></span>
+          <p class="bewertung">
+            <span class="bewertung__sterne" aria-hidden="true">★★★★★</span>
+            <b>5,0</b> von 5
+            <span class="bewertung__quelle">aus 50 Bewertungen auf
+              <a href="https://www.provenexpert.com/de-de/andreas-nagel/" target="_blank" rel="noopener">ProvenExpert</a></span>
+          </p>
+          <blockquote class="stimme">„Herr Nagel war vom ersten Kontakt bis zum Abschluss stets freundlich,
+            hilfsbereit und kompetent.“
+            <cite>17.12.2024</cite></blockquote>
           <p class="weiter">Oder erst weiterlesen:
             <a href="erbschaftsimmobilie.html">Geerbte Immobilie</a> ·
             <a href="scheidungsimmobilie.html">Immobilie bei Trennung</a></p>

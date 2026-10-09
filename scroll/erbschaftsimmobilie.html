@@ -202,15 +202,28 @@
     text-transform: uppercase; color: var(--sc-ink); white-space: nowrap;
     text-shadow: 0 1px 14px rgba(6,9,26,0.9);
   }
-  .teiler__nachsatz {
+  /* Bitte und Nachsatz teilen sich eine Stelle: erst die Aufforderung, nach
+     dem Loslassen die Antwort darauf. Die Bitte geht, sobald der Griff zum
+     ersten Mal angefasst wurde, und kommt nicht wieder. */
+  .teiler__bitte, .teiler__nachsatz {
     position: absolute; left: 50%; top: calc(50% + 74px);
     transform: translateX(-50%);
-    max-width: 30ch; text-align: center;
-    font: 400 0.85rem/1.5 var(--sc-font-text); color: var(--sc-ink);
-    opacity: 0; transition: opacity 0.5s ease 0.2s;
+    max-width: 32ch; text-align: center;
+    font: 400 0.85rem/1.5 var(--sc-font-text);
     text-shadow: 0 1px 18px rgba(6,9,26,0.9);
+    pointer-events: none;
+  }
+  .teiler__bitte {
+    color: var(--sc-ink-soft); opacity: 1; transition: opacity 0.35s ease;
+  }
+  .teiler--angefasst .teiler__bitte { opacity: 0; }
+  .teiler__nachsatz {
+    color: var(--sc-ink);
+    opacity: 0; transition: opacity 0.5s ease 0.2s;
   }
   .teiler--gesagt .teiler__nachsatz { opacity: 1; }
+  /* .quelle traegt sonst 1.1em Vorlauf; im Nachsatz steht sie enger. */
+  .teiler__nachsatz .quelle { margin-top: 0.55em; }
 
   .hinweis {
     position: fixed; z-index: 40; left: clamp(1rem, 3vw, 2.5rem);
@@ -263,9 +276,37 @@
   }
 
   /* Bewertungsschnitt neben dem Terminknopf. */
-  .note-klein{display:block;margin-top:.9em;font-family:var(--sc-font-text);
-    font-size:.8rem;color:var(--sc-ink-soft)}
-  .note-klein a{color:var(--sc-ink-soft);text-underline-offset:3px}
+  /* Die Bewertung stand als graue Kleinschrift unter dem Knopf und ging neben
+     ihm unter; Andreas hat am 9.10. gefragt, ob sie sichtbarer werden kann.
+     Jetzt eine eigene Zeile in Textfarbe: Sterne, die Note gross, die Herkunft
+     klein darunter. Weiterhin statisch gesetzt und ohne Widget, sonst laedt
+     fremdes JavaScript und die Zusage "kein Tracking" faellt. */
+  .bewertung {
+    display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 .5em;
+    margin: 1.15em 0 0; font-family: var(--sc-font-text);
+    font-size: .92rem;
+    /* Geerbt, nicht aus den Tokens: die Scheidungsseite ist eine helle Seite
+       mit dunklem --sc-ink, ihr Schlussakt aber dunkel und sein Text deshalb
+       von Hand hell gesetzt. Mit var(--sc-ink) stand die Bewertung dort
+       dunkel auf dunkel, gemessener Kontrast 1,95:1. */
+    color: inherit;
+  }
+  .bewertung__sterne { font-size: 1rem; letter-spacing: .1em; }
+  .bewertung b { font-size: 1.3rem; font-weight: 600; line-height: 1; }
+  .bewertung__quelle { flex-basis: 100%; margin-top: .25em;
+    font-size: .78rem; color: inherit; opacity: .74; }
+  .bewertung__quelle a { color: inherit; text-underline-offset: 3px; }
+  /* Eine echte Bewertung, woertlich und mit Datum. Umschreiben waere
+     angreifbar, deshalb steht sie samt Eigenheiten des Verfassers da. */
+  .stimme {
+    margin: .85em 0 0; max-width: 46ch;
+    font-family: var(--sc-font-text); font-size: .88rem; line-height: 1.5;
+    color: inherit;
+  }
+  .stimme cite {
+    display: block; margin-top: .35em; font-style: normal;
+    font-size: .74rem; color: inherit; opacity: .74;
+  }
 </style>
 </head>
 <body>
@@ -312,14 +353,18 @@
         und die Frage, wer sich jetzt darum kümmert.</p>
     </div>
 
-    <div class="sc-copy sc-copy--lead" data-sc-copy data-sc-window="0.19 0.31">
+    <div class="sc-copy sc-copy--lead" data-sc-copy data-sc-window="0.19 0.325">
       <h2>Vier Erben, und keinem gehört ein Viertel.</h2>
       <p class="satz">In einer Erbengemeinschaft gehört das Haus allen zusammen,
         nicht jedem ein Viertel davon.</p>
     </div>
 
-    <!-- Das Wohnzimmer trägt bis 0.42 keine Zeile. Die Stille davor ist Absicht. -->
-    <div class="sc-copy sc-copy--trail" data-sc-copy data-sc-window="0.42 0.49">
+    <!-- Die Stille vor dieser Zeile ist Absicht, ihre Länge war es nicht: vom
+         letzten lesbaren Text bis hierher lagen 1,40 Fensterhöhen, und genau
+         die hat Andreas am 9.10. gemeldet ("lange scrollen bis zum nächsten
+         Text"). Jetzt 1,01, und das Fenster beginnt mit der Etappe statt
+         deutlich nach ihr. -->
+    <div class="sc-copy sc-copy--trail" data-sc-copy data-sc-window="0.37 0.485">
       <p class="satz">Vor jeder Frage nach dem Preis steht ein Zimmer, in dem
         jemand gelebt hat.</p>
     </div>
@@ -336,20 +381,29 @@
       </div>
     </div>
 
-    <div class="sc-copy sc-copy--lead" data-sc-copy data-sc-window="0.695 0.81">
+    <div class="sc-copy sc-copy--lead" data-sc-copy data-sc-window="0.68 0.845">
       <h2>Der Wert zum Todestag bestimmt die Steuer.</h2>
       <p class="satz">Wird er zu spät oder zu hoch angesetzt, zahlt die Familie
-        darauf. Davon getrennt läuft die Spekulationsfrist weiter: Sie beginnt
-        beim Erben nicht neu, sondern läuft aus der Zeit des Erblassers.
+        darauf. Davon getrennt läuft die Spekulationsfrist: Sie beginnt beim
+        Erben nicht neu. Die Zeit, in der die Immobilie dem Erblasser gehörte,
+        wird angerechnet.
         <span class="quelle">§&nbsp;23 EStG</span></p>
     </div>
 
-    <div class="sc-copy sc-copy--trail" data-sc-copy data-sc-window="finale">
+    <div class="sc-copy sc-copy--trail" data-sc-copy data-sc-window="0.855 1 0.33 0">
       <h2>Der erste Schritt ist ein Gespräch.</h2>
       <p class="satz">30 Minuten, kostenlos und ohne Auftrag. Danach wissen Sie,
         woran Sie sind.</p>
       <a class="termin" href="https://outlook.office.com/bookwithme/user/42450101008e4181b971c3a67ca974ea@Nagelverhandelt.onmicrosoft.com/meetingtype/ysZKRUtl8UOYFehYCOtjdg2?bookingcode=baa503d6-192f-48c1-934c-13e971a4608c&amp;anonymous&amp;ep=mlink" target="_blank" rel="noopener">Erstgespräch buchen</a>
-      <span class="note-klein">5,0 von 5 aus 50 Bewertungen auf <a href="https://www.provenexpert.com/de-de/andreas-nagel/" target="_blank" rel="noopener">ProvenExpert</a></span>
+      <p class="bewertung">
+        <span class="bewertung__sterne" aria-hidden="true">★★★★★</span>
+        <b>5,0</b> von 5
+        <span class="bewertung__quelle">aus 50 Bewertungen auf
+          <a href="https://www.provenexpert.com/de-de/andreas-nagel/" target="_blank" rel="noopener">ProvenExpert</a></span>
+      </p>
+      <blockquote class="stimme">„Wir hatten sehr gute Zusammenarbeit, Herr Nagel hat uns regelmässige
+        Updates über den Stand des Verkaufs gegeben.“
+        <cite>Familie M., 15.12.2024</cite></blockquote>
     </div>
   </div>
 
@@ -357,13 +411,20 @@
 </div>
 
 <!-- Signature Move. Nur im Wohnzimmer, nur einmal: ein Griff, der aussieht,
-     als könne man das Bild zerschneiden, und es nicht kann. -->
+     als könne man das Bild zerschneiden, und es nicht kann.
+     Andreas hat am 9.10. gemeldet, er erkenne den Sinn nicht. Gezogen hatte er
+     (den Nachsatz gibt es nur nach dem Loslassen), es fehlte die Ansage, was
+     der Zug bedeuten soll. Jetzt sagt es die Bitte davor, der Zug selbst
+     beziffert den Anteil, und der Nachsatz erklärt den Rücksprung, statt ihn
+     in ein Bild zu fassen. -->
 <div class="teiler" id="teiler" aria-hidden="true">
   <div class="teiler__spalt" id="spalt"></div>
   <div class="teiler__griff" id="griff" role="separator" aria-label="Anteil abteilen"></div>
   <span class="teiler__quote" id="quote"></span>
-  <p class="teiler__nachsatz" id="nachsatz">Der Anteil lässt sich nicht
-    herausschneiden, er bleibt am ganzen Haus.</p>
+  <p class="teiler__bitte" id="bitte">Wählen Sie Ihren Anteil.</p>
+  <p class="teiler__nachsatz" id="nachsatz">Das geht nicht. Einen Anteil allein
+    am Haus kann niemand verkaufen, über das Haus entscheiden die Miterben nur
+    gemeinsam. <span class="quelle">§&nbsp;2040 BGB</span></p>
 </div>
 
 <p class="hinweis">Entwurf für Andreas Nagel, September 2026. Nicht veröffentlicht.</p>
@@ -436,7 +497,9 @@
     // Eine Variable auf dem Teiler selbst, nicht drei left-Werte: der
     // Style-Recalc bleibt in diesem Teilbaum und loest kein Layout aus.
     teiler.style.setProperty('--teiler-x', ((p - 0.5) * 100).toFixed(2) + 'vw');
-    const bruch = naechsterBruch(p) + ' abgeteilt';
+    // "1/3 abgeteilt" sagt nicht, wessen Drittel das sein soll. Der Zug soll
+    // den eigenen Anteil meinen, also steht das auch da.
+    const bruch = 'Ihr Anteil: ' + naechsterBruch(p);
     if (bruch !== letzterBruch) { letzterBruch = bruch; quote.textContent = bruch; }
   }
 
@@ -444,7 +507,9 @@
   griff.addEventListener('pointerdown', (e) => {
     zieht = true;
     griff.setPointerCapture(e.pointerId);
-    teiler.classList.add('teiler--zieht');
+    // --angefasst bleibt stehen, auch wenn der Zug als Scroll endet: die
+    // Aufforderung hat dann ihren Zweck erfüllt und soll nicht zurückkommen.
+    teiler.classList.add('teiler--zieht', 'teiler--angefasst');
     teiler.classList.remove('teiler--zurueck', 'teiler--gesagt');
   });
   griff.addEventListener('pointermove', (e) => { if (zieht) setzen(e.clientX); });
