@@ -178,6 +178,29 @@
     .rail__kopf, .rail__ende { width: 76vw; }
     .rail { gap: 1.1rem; }
     .tuer { width: 58px; }
+
+    /* Textgrund auf dem Handy. Die .plane ist fuer den Desktop gebaut, wo die
+       Zeilen unten links stehen: ihr Verlauf deckt unten 95 Prozent und ist
+       bei 70 Prozent Hoehe bei null. Auf dem Telefon rutschen dieselben
+       Bloecke in die Bildmitte, und dort kommen nur 16 bis 28 Prozent an.
+       Andreas hat am 9.10.2026 gemeldet, dass "Dreissig Minuten, kostenfrei
+       und unverbindlich" auf dem Fenster nicht zu lesen ist; nachgemessen im
+       Handy-Ausschnitt 1,59:1 im schlechtesten Zwanzigstel. Dieselbe Rechnung
+       fuer die anderen drei Akte mit .plane: 1,17 bis 2,82. Also kein
+       Einzelfall, sondern eine Regel fuer alle vier.
+
+       Der Scrim liegt nur hinter dem Text, nicht ueber dem ganzen Bild (ein
+       Vollbild-Overlay nimmt dem Fenster die Wirkung und ist im Skill als
+       Ship-Blocker gefuehrt). Er sitzt auf einem ::before statt auf Padding,
+       damit keine Zeile umbricht, und blendet oben wie unten aus, damit keine
+       Kante entsteht. Mit 0,72 misst die gemeldete Stelle 6,36:1. */
+    [data-sc-stage]:has(.plane) .sc-copy::before {
+      content: ""; position: absolute; z-index: -1;
+      inset: -1.9rem calc(-1 * var(--sc-gutter)) -2.1rem;
+      background: linear-gradient(to bottom,
+        rgba(10,13,24,0) 0%, rgba(10,13,24,0.72) 9%,
+        rgba(10,13,24,0.72) 91%, rgba(10,13,24,0) 100%);
+    }
   }
 
   /* Bewertungsschnitt neben dem Terminknopf. */
