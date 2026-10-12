@@ -204,6 +204,96 @@
   }
 
   /* Bewertungsschnitt neben dem Terminknopf. */
+  /* ===== Naht und Textteil ==============================================
+     Der Auftritt ist dunkel, der Text ist hell. Dieser Wechsel ist der
+     Uebergang: Der Film hoert auf, das Dokument faengt an. Die Naht dazwischen
+     blendet die eine Flaeche in die andere, damit es keine Kante gibt, und
+     traegt einen Satz, der sagt, was unten noch kommt. */
+  /* Der Satz steht auf dem vollen dunklen Grund, der Verlauf kommt erst
+     darunter und traegt keine Schrift mehr. Zuerst lag der Satz im Verlauf
+     selbst, und seine letzte Zeile kam dort auf 2,0:1 -- derselbe Fehler, den
+     Andreas am 9.10. auf dem Fensterbild gemeldet hat. So haengt die
+     Lesbarkeit an keiner Hoehe, die sich mit clamp aendert. */
+  .naht {
+    position: relative; z-index: 2;
+    background: var(--sc-canvas);
+    padding: clamp(4rem, 13vh, 7.5rem) var(--sc-gutter) 0;
+  }
+  .naht__satz {
+    max-width: 34ch; margin: 0 auto; text-align: center;
+    font-family: var(--sc-font-text); font-size: clamp(.95rem, 1.5vw, 1.08rem);
+    line-height: 1.6; color: var(--sc-ink-soft);
+  }
+  .naht::after {
+    content: ""; display: block;
+    height: clamp(5rem, 15vh, 9rem);
+    margin: clamp(3rem, 9vh, 5rem) calc(-1 * var(--sc-gutter)) 0;
+    background: linear-gradient(to bottom, var(--sc-canvas) 0%, #1A2238 34%, var(--text-papier) 100%);
+  }
+
+  .text {
+    --text-papier: #F3F4F7;
+    --text-tinte:  #1A1F2E;
+    --text-stein:  #5C6478;
+    --text-karte:  #FFFFFF;
+    --text-linie:  rgba(0, 24, 168, .14);
+    position: relative; z-index: 2;
+    background: var(--text-papier); color: var(--text-tinte);
+    padding: clamp(1rem, 3vh, 2rem) var(--sc-gutter) clamp(4rem, 12vh, 7rem);
+  }
+  /* Die Naht endet auf derselben Farbe, mit der der Textteil beginnt. */
+  .naht { --text-papier: #F3F4F7; }
+
+  .text__spalte { max-width: 38rem; margin: 0 auto; }
+  .text__kicker {
+    font-family: var(--sc-font-text); font-size: .68rem; font-weight: 600;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--sc-accent);
+    margin: clamp(2.6rem, 7vh, 4rem) 0 .5rem;
+  }
+  .text__spalte > .text__kicker:first-child { margin-top: 0; }
+  .text h2 {
+    font-family: var(--sc-font-display); font-weight: 400;
+    font-size: clamp(1.4rem, 3.2vw, 2rem); line-height: 1.18;
+    color: var(--text-tinte); max-width: 22ch; text-wrap: balance;
+    margin: 0 0 .7rem;
+  }
+  .text p {
+    font-family: var(--sc-font-text); font-size: 1rem; line-height: 1.68;
+    color: var(--text-stein); margin: 0 0 1rem; max-width: 36rem;
+  }
+  .text__fein { font-size: .9rem !important; }
+
+  .stimmen { display: grid; gap: 1rem; margin: 1.4rem 0 0;
+             grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+  .stimme-karte {
+    margin: 0; padding: 1.2rem 1.3rem;
+    background: var(--text-karte); border: 1px solid var(--text-linie);
+    border-radius: 3px;
+  }
+  .stimme-karte blockquote {
+    margin: 0 0 .7rem; font-family: var(--sc-font-display); font-weight: 400;
+    font-size: 1.02rem; line-height: 1.5; color: var(--text-tinte);
+  }
+  .stimme-karte figcaption {
+    font-family: var(--sc-font-text); font-size: .8rem; color: var(--text-stein);
+  }
+
+  /* Die Leiste liegt fest ueber der Seite und ist fuer den dunklen Grund
+     gesetzt: helle Schrift, heller Rahmen. Ueber dem hellen Textteil waere sie
+     unlesbar, also dreht sie dort um. Geschaltet wird das von einem Beobachter
+     am Ende der Seite, nicht pro Bild. */
+  .leiste { transition: background .35s ease; }
+  /* Der dunkle Schleier der Leiste traegt die Schrift ueber dem Bild. Ueber dem
+     hellen Textteil wird daraus ein grauer Balken ohne Zweck, also dreht er um. */
+  html.auf-hell .leiste {
+    background: linear-gradient(to bottom, rgba(243,244,247,0.92), rgba(243,244,247,0));
+  }
+  html.auf-hell .leiste__marke,
+  html.auf-hell .leiste__nav > a:not(.leiste__cta) { color: #1A1F2E; }
+  html.auf-hell .leiste__cta {
+    color: #FFFFFF; background: var(--sc-accent); border-color: var(--sc-accent);
+  }
+
   /* Die Bewertung stand als graue Kleinschrift unter dem Knopf und ging neben
      ihm unter; Andreas hat am 9.10. gefragt, ob sie sichtbarer werden kann.
      Jetzt eine eigene Zeile in Textfarbe: Sterne, die Note gross, die Herkunft
@@ -365,6 +455,59 @@
     </div>
   </section>
 
+  <!-- ===== Die Naht: hier endet der Film und beginnt der Text. ============
+       Der Auftritt sagt, worum es geht. Alles, was danach kommt, steht nur
+       hier und nicht oben: wer das macht, was Kunden sagen, wo wir arbeiten.
+       Was der Auftritt schon erzaehlt (die drei Wege, der Ablauf, die
+       Bewertungen vom Finanzamt), wird unten bewusst nicht wiederholt. -->
+  <section class="naht">
+    <p class="naht__satz">Soweit der Überblick. Darunter steht, wer das macht,
+      was Kunden sagen und wo wir arbeiten.</p>
+  </section>
+
+  <section class="text" id="einzelheiten">
+    <div class="text__spalte">
+
+      <p class="text__kicker">Wer Sie begleitet</p>
+      <h2>Über 27 Jahre, und die meisten davon in schwierigen Lagen</h2>
+      <p>Andreas Nagel verkauft seit über 27 Jahren, seit vielen Jahren mit
+        Schwerpunkt auf Immobilien in besonderen Lebenslagen: Erbschaft,
+        Trennung, Alter. Er ist kein Mediator und bezeichnet sich auch nicht so.
+        Aber er hört beide Seiten, bevor er eine Zahl nennt, und sagt auch dann
+        etwas, wenn ein Verkauf gerade nicht die richtige Antwort ist.</p>
+
+      <p class="text__kicker">Was Kunden sagen</p>
+      <h2>Fünfzig Bewertungen, keine davon umgeschrieben</h2>
+      <p>Die Stimmen stehen hier im Wortlaut, mit den Eigenheiten ihrer
+        Verfasser. Eine umformulierte Bewertung wäre keine echte mehr.</p>
+      <div class="stimmen">
+        <figure class="stimme-karte">
+          <blockquote>„Wir hatten sehr gute Zusammenarbeit, Herr Nagel hat uns
+            regelmässige Updates über den Stand des Verkaufs gegeben.“</blockquote>
+          <figcaption>Familie M., 15.12.2024</figcaption>
+        </figure>
+        <figure class="stimme-karte">
+          <blockquote>„Außerordentlich zuvorkommend auch in herausfordernden
+            Situationen. Fast schon bedauerlich, das ich nur 1 Objekt zu
+            verkaufen hatte.“</blockquote>
+          <figcaption>15.12.2024</figcaption>
+        </figure>
+      </div>
+
+      <p class="text__kicker">Wo wir arbeiten</p>
+      <h2>Krefeld, und was daran grenzt</h2>
+      <p>Der Schwerpunkt liegt in Krefeld, mit allen Stadtteilen von Hüls bis
+        Fischeln und von Verberg bis Forstwald. Dazu kommt der linke Niederrhein
+        mit Meerbusch, Willich, Tönisvorst, Kempen, Viersen, Nettetal, Grefrath,
+        Moers, Neukirchen-Vluyn, Neuss, Mönchengladbach und dem Duisburger
+        Süden.</p>
+      <p class="text__fein">Büro: Ostwall 131, 47798 Krefeld. Termine nach
+        Vereinbarung, gern auch bei Ihnen zu Hause, wenn das Objekt dort steht
+        und mehrere Beteiligte am Tisch sitzen sollen.</p>
+
+    </div>
+  </section>
+
   <!-- 6 Der Abschluss -->
   <section data-sc-act="pin" data-sc-span="1.6" id="termin">
     <div data-sc-stage>
@@ -404,6 +547,41 @@
 <script src="weiche.js"></script>
 <script src="scrollcraft.js"></script>
 <script>
+  // Die Leiste ist fuer den dunklen Grund gebaut. Sobald der helle Textteil
+  // unter ihr steht, dreht sie um.
+  //
+  // Ein IntersectionObserver stand hier zuerst und schaltete unzuverlaessig:
+  // Bei schnellen Spruengen kommen seine Rueckrufe verzoegert oder gar nicht,
+  // und ein rootMargin mit -100 % ergibt eine negative Hoehe, bei der er nie
+  // feuert. Jetzt eine Rechnung, die immer dasselbe Ergebnis hat.
+  //
+  // Die Grenzen werden einmal gemessen, nicht in jedem Bild: Pro Scrollereignis
+  // bleibt ein Zahlenvergleich, und geschrieben wird nur beim Wechsel. Das ist
+  // die Regel aus CLAUDE.md, nichts pro Bild zu tun, was sich nicht geaendert
+  // hat.
+  (function () {
+    var hell = document.querySelector('.text');
+    if (!hell) return;
+    var von = 0, bis = 0, zustand = null;
+    function messen() {
+      var r = hell.getBoundingClientRect();
+      von = r.top + scrollY;
+      bis = von + r.height;
+    }
+    function pruefen() {
+      var kante = scrollY + 56;              // Unterkante der Leiste
+      var jetzt = kante > von && kante < bis;
+      if (jetzt === zustand) return;
+      zustand = jetzt;
+      document.documentElement.classList.toggle('auf-hell', jetzt);
+    }
+    addEventListener('scroll', pruefen, { passive: true });
+    addEventListener('resize', function () { messen(); pruefen(); }, { passive: true });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { messen(); pruefen(); });
+    addEventListener('load', function () { messen(); pruefen(); });
+    messen(); pruefen();
+  })();
+
   // Die Spannweiten sind in Fensterhoehen gerechnet, also auf jedem Geraet
   // gleich viel Seite. Gleich viel Arbeit sind sie nicht: eine Trackpadgeste
   // traegt ueber einen halben Schirm, ein Daumenwisch kaum. Auf dem Telefon
