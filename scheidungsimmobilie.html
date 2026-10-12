@@ -26,6 +26,12 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
+  /* Sprungziele: Google baut aus diesen Marken die "Zu diesem Abschnitt
+     springen"-Verweise im Suchergebnis, und das Verzeichnis der Seite
+     zeigt auf dieselben. Der Abstand haelt die angesprungene Zeile vom
+     oberen Rand weg. */
+  h2[id]{scroll-margin-top:1.6rem}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{margin:0;overflow-x:hidden;background:var(--papier);color:var(--tinte);font-family:var(--serif);
   font-size:18.5px;line-height:1.72;-webkit-font-smoothing:antialiased}
 
@@ -359,7 +365,7 @@ footer h2{font-size:1.2rem}
       <div class="summary rv">
         <div class="summary-head">
           <span class="summary-label">Kurz gefasst</span>
-          <h2>Das Wichtigste in 30 Sekunden</h2>
+          <h2 id="ueberblick">Das Wichtigste in 30 Sekunden</h2>
         </div>
         <p class="summary-lead">Bei einer Scheidung muss die gemeinsame Immobilie nicht zwingend verkauft werden. Es gibt vier Wege: gemeinsamer Verkauf mit Aufteilung des Erlöses, Übernahme durch einen Partner mit Auszahlung des anderen, gemeinsames Halten und Vermieten oder, in seltenen Fällen, die Realteilung. Sind beide im Grundbuch eingetragen, kann keiner allein verkaufen. Ohne Einigung bleibt nur die Teilungsversteigerung nach § 180 ZVG, die in der Regel deutlich weniger einbringt. Tragfähig wird eine Lösung meist erst, wenn drei Punkte geklärt sind: ein Verkehrswert, dessen Herleitung beide Seiten nachvollziehen können, die Zusage der finanzierenden Bank und der Zeitpunkt. Ein Verkauf vor Rechtskraft der Scheidung vermeidet steuerliche Fallstricke, die nach dem Auszug eines Partners entstehen können.</p>
         <p class="summary-foot">Die Teilungsversteigerung nach § 180 ZVG bleibt rechtlich immer möglich, bringt aber in der Regel weniger ein als ein freihändiger Verkauf und ist damit für beide Seiten das schlechteste Ergebnis. Bundesweit endet nur rund ein halbes Prozent der Fälle so.</p>
@@ -384,7 +390,7 @@ footer h2{font-size:1.2rem}
           <span class="ki">KI-generiert</span></figcaption>
       </figure>
       <p class="kicker rv">Die Ausgangslage</p>
-      <h2 class="rv">Die vier Wege aus der gemeinsamen Immobilie</h2>
+      <h2 id="vier-wege" class="rv">Die vier Wege aus der gemeinsamen Immobilie</h2>
       <p class="rv">Bei einer Trennung ist die Immobilie fast immer der größte gemeinsame Vermögenswert. Sie ist Geld, aber sie ist auch das Wohnzimmer, in dem die Kinder groß geworden sind. Deshalb wird über sie selten so nüchtern gesprochen, wie es nötig wäre.</p>
       <p class="rv">Dazu kommt ein sehr praktisches Problem. Ein Depot lässt sich teilen, ein Konto aufteilen, ein Auto verkaufen. Ein Haus kann man nur ganz übertragen oder ganz verkaufen, und an dieser Unteilbarkeit hängen sich die meisten Trennungen fest.</p>
     </div>
@@ -433,7 +439,7 @@ footer h2{font-size:1.2rem}
           <span class="ki">KI-generiert</span></figcaption>
       </figure>
       <p class="kicker rv">Das Gespräch</p>
-      <h2 class="rv">Der Punkt, an dem es kippt: Wer redet mit wem?</h2>
+      <h2 id="kommunikation" class="rv">Der Punkt, an dem es kippt: Wer redet mit wem?</h2>
       <p class="rv">In fast jeder Trennung gibt es eine Phase, in der die beiden Partner nicht mehr direkt miteinander sprechen, sondern über Dritte: über Anwälte, über die Kinder, über Freunde. Sobald das die Immobilie erreicht, wird jede Sachinformation zur Parteiinformation und entsprechend misstrauisch aufgenommen.</p>
       <p class="rv">Deshalb ist die wichtigste Regel bei einer Scheidungsimmobilie zugleich die unbequemste: <strong>Beide sitzen am selben Tisch, oder es funktioniert nicht.</strong> Vertragen muss man sich dafür nicht. Aber eine Zahl, die nur eine Seite gehört hat, ist für die andere keine Zahl, sondern eine Behauptung.</p>
       <div class="dossier rv">
@@ -459,7 +465,7 @@ footer h2{font-size:1.2rem}
           <span class="ki">KI-generiert</span></figcaption>
       </figure>
       <p class="kicker rv">Recht &amp; Geld</p>
-      <h2 class="rv">Zeitpunkt und Steuern: der teuerste vermeidbare Fehler</h2>
+      <h2 id="zeitpunkt-und-steuern" class="rv">Zeitpunkt und Steuern: der teuerste vermeidbare Fehler</h2>
       <p class="rv">Es gibt eine steuerliche Falle, die in Trennungen regelmäßig zuschnappt und die viele Betroffene erst kennen, wenn der Bescheid da ist.</p>
       <h3 class="rv">Spekulationssteuer nach dem Auszug</h3>
       <p class="rv">Beim Verkauf einer Immobilie innerhalb von zehn Jahren nach Anschaffung fällt Einkommensteuer auf den Veräußerungsgewinn an (§ 23 EStG). Ausgenommen ist die Immobilie, die <em>zu eigenen Wohnzwecken</em> genutzt wurde, und zwar im Verkaufsjahr und in den beiden Jahren davor.</p>
@@ -485,7 +491,7 @@ footer h2{font-size:1.2rem}
           <span class="ki">KI-generiert</span></figcaption>
       </figure>
       <p class="kicker rv">Finanzierung</p>
-      <h2 class="rv">Die Bank: der Punkt, an dem viele Einigungen platzen</h2>
+      <h2 id="finanzierung" class="rv">Die Bank: der Punkt, an dem viele Einigungen platzen</h2>
       <p class="rv">Der Kreditvertrag ändert sich durch eine Trennung nicht. Beide Ehepartner haben ihn unterschrieben, beide haften gesamtschuldnerisch weiter, unabhängig davon, wer ausgezogen ist und wer die Raten zahlt. In Trennungsgesprächen kommt dieser Punkt meist viel zu spät zur Sprache.</p>
       <h3 class="rv">Bei Übernahme durch einen Partner</h3>
       <p class="rv">Die Bank muss den anderen ausdrücklich aus der Haftung entlassen. Sie tut das nur, wenn der verbleibende Partner die Finanzierung allein tragen kann. Viele Paare einigen sich mündlich auf eine Übernahme, ohne diese Zusage eingeholt zu haben, und stehen Monate später wieder am Anfang. Deshalb klärt man sie besser vor allem anderen.</p>
@@ -499,7 +505,7 @@ footer h2{font-size:1.2rem}
   <section class="chapter">
     <div class="wrap">
       <p class="kicker rv">Der Wert</p>
-      <h2 class="rv">Was Ihre Immobilie in Krefeld wert ist</h2>
+      <h2 id="marktwert-krefeld" class="rv">Was Ihre Immobilie in Krefeld wert ist</h2>
             <p class="rv">Der Krefelder Markt liegt im Juli 2026 im Mittel bei rund <strong>3.335 Euro je Quadratmeter für Häuser</strong><br>und rund <strong>2.447 Euro für Eigentumswohnungen</strong>; Häuser haben im Jahresvergleich um etwa 2,2 Prozent zugelegt. Innerhalb der Stadt ist die Spanne groß, von rund 2.110 Euro in der Stadtmitte bis über 3.830 Euro in Verberg, Forstwald und Traar.</p>
       <p class="rv">Für eine Trennung ist dieser Durchschnitt allerdings nur Orientierung. Weil der Wert die Grundlage jeder Auszahlung und jeder Zugewinnrechnung ist, muss er <em>hergeleitet</em> sein: aus Vergleichsobjekten im selben Stadtteil, aus den Bodenrichtwerten des Gutachterausschusses, aus dem tatsächlichen Zustand. Ein Wert, den nur eine Seite glaubt, verlängert den Konflikt.</p>
       <p class="rv">Und er muss finanzierbar sein. Ein Preis, den Käufer zwar zahlen wollen, aber nicht finanziert bekommen, kostet vor allem Zeit. Mit jeder Zinsstufe fällt ein Teil der Interessenten aus der Finanzierung; wer das nicht mitrechnet, verkauft am Ende später und schlechter.</p>
@@ -518,7 +524,7 @@ footer h2{font-size:1.2rem}
           <span class="ki">KI-generiert</span></figcaption>
       </figure>
       <p class="kicker rv">Der Weg</p>
-      <h2 class="rv">So läuft die Begleitung ab</h2>
+      <h2 id="ablauf" class="rv">So läuft die Begleitung ab</h2>
       <div class="timeline">
         <div class="tl-line"></div>
         <div class="tstep rv-item" style="--d:0">
@@ -557,7 +563,7 @@ footer h2{font-size:1.2rem}
           <span class="ki">KI-generiert</span></figcaption>
       </figure>
       <p class="kicker rv">Die Person</p>
-      <h2 class="rv">Kein Mediator, aber jemand, der beide Seiten hört</h2>
+      <h2 id="arbeitsweise" class="rv">Kein Mediator, aber jemand, der beide Seiten hört</h2>
             <p class="rv">Über 27 Jahre Vertriebserfahrung, Schwerpunkt auf Immobilien in besonderen Lebenslagen. Aus der eigenen Scheidung habe ich für mich Konsequenzen gezogen: notarieller Erbvertrag und Ehevertrag, geschlossen zu einem Zeitpunkt, an dem sich solche Dinge noch in Ruhe klären lassen.</p>
       <p class="rv">Mediator bin ich ausdrücklich nicht und nenne mich auch nicht so. Mein Ziel ist, dass Menschen die Immobilie über uns verkaufen, wenn das für sie sinnvoll ist. Und wenn es nicht sinnvoll ist, sage ich auch, was stattdessen möglich wäre. Beide Seiten wissen damit von Anfang an, woran sie sind.</p>
       <div class="region rv">
@@ -599,7 +605,7 @@ footer h2{font-size:1.2rem}
 
   <section class="cta">
     <div class="wrap rv">
-      <h2>Ein neutraler Dritter, bevor es festgefahren ist</h2>
+      <h2 id="termin">Ein neutraler Dritter, bevor es festgefahren ist</h2>
       <p>Das Erstgespräch ist kostenfrei und unverbindlich, auch dann, wenn am Ende kein Verkauf steht, und auch dann, wenn zunächst nur einer von Ihnen beiden anruft.</p>
       <a class="btn" href="https://outlook.office.com/bookwithme/user/42450101008e4181b971c3a67ca974ea@Nagelverhandelt.onmicrosoft.com/meetingtype/ysZKRUtl8UOYFehYCOtjdg2?bookingcode=baa503d6-192f-48c1-934c-13e971a4608c&amp;anonymous&amp;ismsaljsauthenabled&amp;ep=mcard"
          target="_blank" rel="noopener">Erstgespräch buchen · 30 Minuten</a>
@@ -610,7 +616,7 @@ footer h2{font-size:1.2rem}
   <section class="chapter">
     <div class="wrap">
       <p class="kicker rv">Fragen &amp; Antworten</p>
-      <h2 class="rv">Häufige Fragen zur Scheidungsimmobilie</h2>
+      <h2 id="faq" class="rv">Häufige Fragen zur Scheidungsimmobilie</h2>
       <div class="faq rv">
         <div class="qa open">
           <button aria-expanded="true">Muss das Haus bei einer Scheidung verkauft werden?<span class="ic"></span></button>
@@ -667,7 +673,7 @@ footer h2{font-size:1.2rem}
   <section class="chapter">
     <div class="wrap">
       <p class="kicker rv">Vertiefung</p>
-      <h2 class="rv">Weiterführende Beiträge</h2>
+      <h2 id="weiterlesen" class="rv">Weiterführende Beiträge</h2>
       <ul class="linklist rv">
         <li><a href="/haus-scheidung-auszahlen-berechnung/">Partner auszahlen bei Scheidung: So wird der Betrag berechnet</a><span>Verkehrswert, Restdarlehen, Vorfälligkeit: die Rechnung Schritt für Schritt</span></li>
         <li><a href="/zugewinnausgleich-immobilie/">Zugewinnausgleich und Immobilie: Stichtag, Bewertung, Sonderfälle</a><span>Was in die Rechnung fällt und was nach § 1374 Abs. 2 BGB privilegiert ist</span></li>
@@ -681,7 +687,7 @@ footer h2{font-size:1.2rem}
 
   <footer>
     <div class="wrap">
-      <h2 class="rv">Quellen</h2>
+      <h2 id="quellen" class="rv">Quellen</h2>
       <ol class="sources rv">
         <li>Bundesfinanzhof, Urteil vom 14.02.2023, Az. IX R 11/21: steuerpflichtiges privates Veräußerungsgeschäft bei Übertragung des Miteigentumsanteils an den in der Immobilie verbliebenen Ex-Partner nach eigenem Auszug.</li>
         <li>Gesetzliche Grundlagen: § 1361b Abs. 3 S. 2 BGB (Nutzungsentschädigung ab Trennung bis Rechtskraft der Scheidung), §§ 1365, 1373, 1374 Abs. 2 BGB (Verfügungsbeschränkung, Zugewinn), § 745 Abs. 2 BGB (Nutzungsentschädigung nach Rechtskraft der Scheidung), § 180 ZVG (Teilungsversteigerung), § 23 EStG (private Veräußerungsgeschäfte), § 3 Nr. 5 GrEStG (Grunderwerbsteuerbefreiung bei Vermögensauseinandersetzung nach Scheidung).</li>
@@ -835,5 +841,32 @@ footer h2{font-size:1.2rem}
 
 
 
+<script>
+  /* Ein Anker aus der Suche landet sonst daneben. Der Browser springt, sobald
+     er die Marke kennt, aber da stehen die Schriften noch nicht und einzelne
+     Bilder haben ihre Hoehe noch nicht; die Seite waechst danach unter dem Ziel
+     weg. Am 12.10.2026 gemessen: 3.413 px daneben, das Ziel war nicht einmal
+     im Bild. Also einmal nachsetzen, sobald alles steht, und nur solange der
+     Leser nicht selbst gescrollt hat. */
+  (function () {
+    if (!location.hash) return;
+    var ziel;
+    try { ziel = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (e) { return; }
+    if (!ziel) return;
+    var eigen = false;
+    var merken = function () { eigen = true; };
+    addEventListener('wheel', merken, { passive: true, once: true });
+    addEventListener('touchstart', merken, { passive: true, once: true });
+    addEventListener('keydown', merken, { once: true });
+    var nachsetzen = function () {
+      if (eigen) return;
+      // Ohne Animation: Der Leser hat die Seite gerade erst geoeffnet, ein
+      // Scrollen ueber den halben Text waere nur Unruhe.
+      ziel.scrollIntoView({ behavior: 'instant', block: 'start' });
+    };
+    addEventListener('load', nachsetzen);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(nachsetzen);
+  })();
+</script>
 </body>
 </html>

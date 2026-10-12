@@ -26,6 +26,12 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
+  /* Sprungziele: Google baut aus diesen Marken die "Zu diesem Abschnitt
+     springen"-Verweise im Suchergebnis, und das Verzeichnis der Seite
+     zeigt auf dieselben. Der Abstand haelt die angesprungene Zeile vom
+     oberen Rand weg. */
+  h2[id]{scroll-margin-top:1.6rem}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{margin:0;overflow-x:hidden;background:var(--papier);color:var(--tinte);font-family:var(--serif);
   font-size:18.5px;line-height:1.72;-webkit-font-smoothing:antialiased}
 
@@ -359,7 +365,7 @@ footer h2{font-size:1.2rem}
       <div class="summary rv">
         <div class="summary-head">
           <span class="summary-label">Kurz gefasst</span>
-          <h2>Das Wichtigste in 30 Sekunden</h2>
+          <h2 id="ueberblick">Das Wichtigste in 30 Sekunden</h2>
         </div>
         <p class="summary-lead">Eine geerbte Immobilie in Krefeld können die Erben nur gemeinsam verkaufen: <strong>§ 2040 BGB</strong> verlangt die Mitwirkung aller Miterben, ein einzelner kann den Verkauf also blockieren. Der Weg zur Einigung führt in der Regel über drei Schritte:</p>
         <div class="summary-steps">
@@ -389,7 +395,7 @@ footer h2{font-size:1.2rem}
           <span class="ki">KI-generiert</span></figcaption>
       </figure>
       <p class="kicker rv">Die Ausgangslage</p>
-      <h2 class="rv">Warum eine Erbengemeinschaft so schwer zu bewegen ist</h2>
+      <h2 id="erbengemeinschaft" class="rv">Warum eine Erbengemeinschaft so schwer zu bewegen ist</h2>
       <p class="rv">Die Erbengemeinschaft ist eine Gesamthandsgemeinschaft. Niemandem gehört „das halbe Haus“ oder „ein Drittel des Grundstücks“, allen gehört alles gemeinsam. Über einen Nachlassgegenstand, und dazu zählt die Immobilie, können die Miterben nach <strong>§ 2040 BGB</strong> nur gemeinschaftlich verfügen. Ein Verkauf braucht die Zustimmung jedes einzelnen Miterben. Drei können nicht den vierten überstimmen.</p>
       <p class="rv">Daraus entsteht die typische Blockade: Vier Geschwister, drei wollen verkaufen, einer nicht. Rechtlich hat der eine dieselbe Macht wie die drei zusammen. Weil jeder das weiß, wird der Konflikt schnell grundsätzlich, und es geht dann längst nicht mehr um Quadratmeter, sondern um alte Geschichten.</p>
       <p class="rv">Konflikt ist dabei nicht die Regel, aber häufig genug, um ihn ernst zu nehmen: Jeder fünfte Erbe berichtet von Streit, bei Nachlässen ab 50.000 Euro sind es 26 Prozent. Die häufigsten Auslöser: das Gefühl, benachteiligt worden zu sein (27&nbsp;%), fehlende Gespräche zu Lebzeiten (26&nbsp;%) und die Schwierigkeit, eine Erbengemeinschaft wieder aufzulösen (24&nbsp;%).</p>
@@ -439,7 +445,7 @@ footer h2{font-size:1.2rem}
           <span class="ki">KI-generiert</span></figcaption>
       </figure>
       <p class="kicker rv">Der Weg</p>
-      <h2 class="rv">Von der Blockade zur Beurkundung</h2>
+      <h2 id="blockade-loesen" class="rv">Von der Blockade zur Beurkundung</h2>
       <div class="timeline">
         <div class="tl-line"><i></i></div>
         <div class="tstep rv-item">
@@ -580,7 +586,7 @@ footer h2{font-size:1.2rem}
           <span class="quelle">Grenzen: amtlicher Datensatz der Stadt Krefeld, Datenlizenz Deutschland Zero 2.0</span></figcaption>
       </figure>
       <p class="kicker rv">Der Markt</p>
-      <h2 class="rv">Was eine Erbschaftsimmobilie in Krefeld wert ist</h2>
+      <h2 id="marktwert-krefeld" class="rv">Was eine Erbschaftsimmobilie in Krefeld wert ist</h2>
       <p class="rv">Der Krefelder Markt liegt im Juli 2026 im Mittel bei rund 3.335 Euro je Quadratmeter für Häuser und rund 2.447 Euro für Eigentumswohnungen. Häuser haben im Jahresvergleich um etwa 2,2 Prozent zugelegt, Wohnungen um 0,9 Prozent. Ein einzelner Durchschnittswert verschweigt aber, wie groß die Spreizung innerhalb der Stadt ist, deshalb hier bewusst als Spanne statt als Einzelwert.</p>
     </div>
     <div class="wrap-wide">
@@ -617,7 +623,7 @@ footer h2{font-size:1.2rem}
           <span class="ki">KI-generiert</span></figcaption>
       </figure>
       <p class="kicker rv">Recht &amp; Geld</p>
-      <h2 class="rv">Steuern und Fristen, die Erben kennen sollten</h2>
+      <h2 id="steuern-und-fristen" class="rv">Steuern und Fristen, die Erben kennen sollten</h2>
       <p class="rv">Erbschaftsteuer und Spekulationssteuer werden regelmäßig verwechselt, und die Verwechslung kostet Geld.</p>
 
       <h3 class="rv">Erbschaftsteuer</h3>
@@ -668,7 +674,7 @@ footer h2{font-size:1.2rem}
   <section class="chapter">
     <div class="wrap">
       <p class="kicker rv">Aus der Praxis</p>
-      <h2 class="rv">Fünf Fehler, die Erbengemeinschaften teuer zu stehen kommen</h2>
+      <h2 id="haeufige-fehler" class="rv">Fünf Fehler, die Erbengemeinschaften teuer zu stehen kommen</h2>
       <div class="mistakes">
         <div class="mistake rv-item">
           <div><h3>Zu lange warten</h3>
@@ -702,7 +708,7 @@ footer h2{font-size:1.2rem}
           <span class="ki">KI-generiert</span></figcaption>
       </figure>
       <p class="kicker rv">Wer Sie begleitet</p>
-      <h2 class="rv">Kein Mediator. Aber einer, der beide Seiten hört.</h2>
+      <h2 id="arbeitsweise" class="rv">Kein Mediator. Aber einer, der beide Seiten hört.</h2>
       <p class="rv">Über 27 Jahre Erfahrung im Vertrieb, seit vielen Jahren Schwerpunkt auf Immobilien in besonderen Lebenslagen: Erbschaft, Scheidung, Alter. Andreas Nagel ist kein Mediator und bezeichnet sich auch nicht so: „Unser Ziel ist es natürlich, Menschen davon zu überzeugen, mit uns die Immobilie zu verkaufen, wenn das sinnvoll ist. Aber wenn es nicht sinnvoll ist, weise ich auch darauf hin, was man stattdessen machen kann.“ Alle Beteiligten wissen damit von Anfang an, woran sie sind.</p>
       <div class="region rv">
         <strong>Einzugsgebiet.</strong> Krefeld mit allen Stadtteilen: Bockum, Verberg, Traar, Forstwald, Hüls, Fischeln, Oppum, Linn, Gellep-Stratum, Uerdingen, Cracau, Dießem/Lehmheide, Inrath/Kliedbruch, Gartenstadt, Stadtwald, Königshof, Benrad und Stadtmitte. Dazu der linke Niederrhein und das angrenzende Rheinland: Meerbusch, Willich, Tönisvorst, Kempen, Viersen, Nettetal, Grefrath, Moers, Neukirchen-Vluyn, Neuss, Mönchengladbach und der Duisburger Süden.
@@ -743,7 +749,7 @@ footer h2{font-size:1.2rem}
 
   <section class="cta">
     <div class="wrap rv">
-      <h2>Ein Gespräch, bevor es ein Problem wird</h2>
+      <h2 id="termin">Ein Gespräch, bevor es ein Problem wird</h2>
       <p>Ob Sie gerade geerbt haben, seit zwei Jahren nicht weiterkommen oder für Ihre Eltern vorsorgen möchten: Das Erstgespräch ist kostenfrei und unverbindlich, auch dann, wenn am Ende kein Verkauf steht.</p>
       <a class="btn" href="https://outlook.office.com/bookwithme/user/42450101008e4181b971c3a67ca974ea@Nagelverhandelt.onmicrosoft.com/meetingtype/ysZKRUtl8UOYFehYCOtjdg2?bookingcode=baa503d6-192f-48c1-934c-13e971a4608c&amp;anonymous&amp;ismsaljsauthenabled&amp;ep=mcard"
          target="_blank" rel="noopener">Erstgespräch buchen · 30 Minuten</a>
@@ -751,10 +757,10 @@ footer h2{font-size:1.2rem}
     </div>
   </section>
 
-  <section class="chapter" id="faq">
+  <section class="chapter">
     <div class="wrap">
       <p class="kicker rv">Nachgefragt</p>
-      <h2 class="rv">Häufige Fragen zur Erbschaftsimmobilie</h2>
+      <h2 id="faq" class="rv">Häufige Fragen zur Erbschaftsimmobilie</h2>
       <div class="faq rv">
         <div class="qa open">
           <button aria-expanded="true">Können wir verkaufen, wenn ein Miterbe nicht zustimmt?<span class="ic"></span></button>
@@ -807,7 +813,7 @@ footer h2{font-size:1.2rem}
   <section class="chapter">
     <div class="wrap">
       <p class="kicker rv">Weiterlesen</p>
-      <h2 class="rv">Weiterführende Beiträge</h2>
+      <h2 id="weiterlesen" class="rv">Weiterführende Beiträge</h2>
       <ul class="linklist rv">
         <li><a href="/erbengemeinschaft-immobilie-auszahlen/">Erbengemeinschaft: Miterben auszahlen und den Anteil berechnen</a><span>Rechenweg, Finanzierung und die typischen Streitpunkte bei der Bewertung</span></li>
         <li><a href="/teilungsversteigerung-vermeiden/">Teilungsversteigerung vermeiden: Was sie kostet und was stattdessen geht</a><span>Ablauf, Dauer, Kosten und die realistischen Alternativen</span></li>
@@ -820,7 +826,7 @@ footer h2{font-size:1.2rem}
 
   <footer>
     <div class="wrap">
-      <h2 class="rv">Quellen</h2>
+      <h2 id="quellen" class="rv">Quellen</h2>
       <ol class="sources rv">
         <li>YouGov im Auftrag der Deutschen Bank, Befragung vom 29.09. bis 02.10.2023, n = 2.074 Personen ab 18 Jahren. Angaben zu Streit im Erbfall (21&nbsp;% gesamt, 26&nbsp;% bei Nachlässen ab 50.000 €) und zu den Streitursachen.</li>
         <li>Institut für Demoskopie Allensbach, „Erben und Vererben“ 2024. Verbreitung von Testamenten (35&nbsp;% gesamt, 11&nbsp;% unter 50 Jahren, rund 50&nbsp;% im Rentenalter; Durchschnittsalter bei Errichtung 58 Jahre).</li>
@@ -973,5 +979,32 @@ footer h2{font-size:1.2rem}
 
 
 
+<script>
+  /* Ein Anker aus der Suche landet sonst daneben. Der Browser springt, sobald
+     er die Marke kennt, aber da stehen die Schriften noch nicht und einzelne
+     Bilder haben ihre Hoehe noch nicht; die Seite waechst danach unter dem Ziel
+     weg. Am 12.10.2026 gemessen: 3.413 px daneben, das Ziel war nicht einmal
+     im Bild. Also einmal nachsetzen, sobald alles steht, und nur solange der
+     Leser nicht selbst gescrollt hat. */
+  (function () {
+    if (!location.hash) return;
+    var ziel;
+    try { ziel = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (e) { return; }
+    if (!ziel) return;
+    var eigen = false;
+    var merken = function () { eigen = true; };
+    addEventListener('wheel', merken, { passive: true, once: true });
+    addEventListener('touchstart', merken, { passive: true, once: true });
+    addEventListener('keydown', merken, { once: true });
+    var nachsetzen = function () {
+      if (eigen) return;
+      // Ohne Animation: Der Leser hat die Seite gerade erst geoeffnet, ein
+      // Scrollen ueber den halben Text waere nur Unruhe.
+      ziel.scrollIntoView({ behavior: 'instant', block: 'start' });
+    };
+    addEventListener('load', nachsetzen);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(nachsetzen);
+  })();
+</script>
 </body>
 </html>
