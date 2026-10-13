@@ -618,7 +618,16 @@ footer h2{font-size:1.2rem}
 </head>
 <body>
 <div class="sc-kopf">
-<section data-sc-act="pin" data-sc-span="2.4" id="akt-eins">
+<a class="marke" href="index.html">Andreas Nagel</a>
+<div class="naht" id="naht" aria-hidden="true">
+  <span class="naht__schild"><span>Die eine Seite</span><span>Die andere</span></span>
+</div>
+
+
+<main>
+
+  <!-- Akt 1: der Split steht sofort, beide Überschriften auf einem Schirm -->
+  <section data-sc-act="pin" data-sc-span="2.4" id="akt-eins">
     <div data-sc-stage>
       <div class="paar">
         <div class="seite seite--hell">
@@ -640,7 +649,9 @@ footer h2{font-size:1.2rem}
       </div>
     </div>
   </section>
-<section data-sc-act="pin" data-sc-span="3.4" data-sc-expose id="akt-listen">
+
+  <!-- Akt 2: der Signature Move. Zwei Listen, ein Posten, der auf beiden steht -->
+  <section data-sc-act="pin" data-sc-span="3.4" data-sc-expose id="akt-listen">
     <div data-sc-stage>
       <div class="listen">
         <div class="liste">
@@ -666,7 +677,9 @@ footer h2{font-size:1.2rem}
       </div>
     </div>
   </section>
-<section data-sc-act="pin" data-sc-span="3">
+
+  <!-- Akt 3: was rechtlich gilt, links Bild, rechts Text -->
+  <section data-sc-act="pin" data-sc-span="3">
     <div data-sc-stage>
       <div class="paar">
         <div class="seite seite--hell">
@@ -689,7 +702,9 @@ footer h2{font-size:1.2rem}
       </div>
     </div>
   </section>
-<section data-sc-act="scrub" data-sc-span="2.8" data-sc-dwell="0.4" data-sc-expose id="akt-schluss">
+
+  <!-- Akt 4: der Zusammenfall. Die Naht fährt an den Rand, eine Fläche bleibt -->
+  <section data-sc-act="scrub" data-sc-span="2.8" data-sc-dwell="0.4" data-sc-expose id="akt-schluss">
     <div data-sc-stage>
       <img class="sc-stage__poster" src="scroll/assets/trennung/p04.webp" data-sc-lite="scroll/assets/trennung/l04.webp" data-sc-lite-mobile="scroll/assets/trennung/l04-m.webp" alt="">
       <video data-sc-scrub data-sc-src="scroll/assets/trennung/04.mp4"
@@ -714,6 +729,10 @@ footer h2{font-size:1.2rem}
       </div>
     </div>
   </section>
+
+</main>
+
+<!-- Die Weiche entscheidet vor dem Motor, ob Clips geholt werden. Siehe weiche.js. -->
 </div>
 
 <!-- Weiterlesen: Der Auftritt ist zu Ende, die Terminbuchung steht darueber.
@@ -1309,6 +1328,107 @@ footer h2{font-size:1.2rem}
   })();
 </script>
 <script>
+
+  
+
+  const naht    = document.getElementById('naht');
+  const listen  = document.getElementById('akt-listen');
+  const schluss = document.getElementById('akt-schluss');
+
+  // Jeder Posten merkt sich seinen Platz in seiner eigenen Liste einmal. Vorher
+  // wurde er pro Bild aus parentElement.children neu ausgezaehlt, also 10 mal
+  // je Bild eine Liste in ein Array kopiert.
+  const posten = [...listen.querySelectorAll('li')].map((el) => ({
+    el,
+    i: [...el.parentElement.children].indexOf(el),
+    haus: el.classList.contains('posten-haus'),
+    da: false, gestrichen: false
+  }));
+
+  // --sc-p steht als Inline-Style auf dem Akt, die Engine schreibt es dort hin,
+  // und nur auf diesen zwei Akten: sie tragen dafuer data-sc-expose. Ohne das
+  // Attribut schreibt die Engine die Variable gar nicht mehr, siehe den Kopf
+  // von scrollcraft.js.
+  // getComputedStyle() dafuer zu rufen erzwang pro Bild zweimal einen Style-
+  // Recalc samt Layout, und direkt danach schrieben die Zeilen unten Klassen:
+  // Lesen, Schreiben, Lesen, Schreiben, 120 mal in der Sekunde. Genau das ist
+  // das Ruckeln. Der Inline-Wert kostet nichts.
+  function fortschritt(el) {
+    return parseFloat(el.style.getPropertyValue('--sc-p')) || 0;
+  }
+
+  // Der Signature Move: beide Listen füllen sich beim Scrollen, und am Ende
+  // wird alles durchgestrichen, was sich aufteilen lässt. Übrig bleibt auf
+  // beiden Seiten derselbe Posten.
+  function listenSchritt() {
+    const p = fortschritt(listen);
+    const proSeite = 5;
+    const sichtbar = Math.round(p * (proSeite + 1.6));
+    const streicht = p > 0.74;
+    for (const q of posten) {
+      // Nur schreiben, wenn sich wirklich etwas aendert. classList.toggle mit
+      // dem Wert, den das Element schon hat, invalidiert den Teilbaum trotzdem.
+      const da = q.i < sichtbar;
+      if (da !== q.da) { q.da = da; q.el.classList.toggle('da', da); }
+      const gestrichen = streicht && !q.haus;
+      if (gestrichen !== q.gestrichen) {
+        q.gestrichen = gestrichen;
+        q.el.classList.toggle('gestrichen', gestrichen);
+      }
+    }
+  }
+
+  // Der Zusammenfall: die Naht wandert an den linken Rand und verschwindet,
+  // die verbliebene Fläche nimmt die ganze Breite.
+  // Senkrecht auf dem Schirm, waagerecht auf dem Telefon: dieselbe Strecke,
+  // andere Achse. Der Breakpoint ist derselbe wie im Stylesheet.
+  const quer = matchMedia('(max-width: 760px)');
+  let nahtAuf = -1, nahtWeg = false;
+
+  function schlussSchritt() {
+    const p = fortschritt(schluss);
+    const auf = Math.max(0, Math.min(1, (p - 0.1) / 0.45));
+    if (Math.abs(auf - nahtAuf) > 0.002) {
+      nahtAuf = auf;
+      const d = (-auf * 50).toFixed(2);
+      naht.style.transform = quer.matches
+        ? 'translate3d(0,' + d + 'vh,0)'
+        : 'translate3d(' + d + 'vw,0,0)';
+    }
+    const weg = auf > 0.85;
+    if (weg !== nahtWeg) { nahtWeg = weg; naht.classList.toggle('naht--weg', weg); }
+  }
+
+  // Die Schleife lief bisher von der ersten bis zur letzten Sekunde der Seite,
+  // auch waehrend beide Akte weit ausserhalb des Bildes lagen. Jetzt laeuft sie
+  // nur, solange einer von beiden zu sehen ist, und haelt danach an.
+  let laeuft = false, sichtbar = 0;
+
+  function schleife() {
+    listenSchritt();
+    schlussSchritt();
+    if (sichtbar > 0) requestAnimationFrame(schleife);
+    else laeuft = false;
+  }
+
+  new IntersectionObserver((eintraege) => {
+    for (const e of eintraege) sichtbar += e.isIntersecting ? 1 : -1;
+    sichtbar = Math.max(0, sichtbar);
+    // Ein letzter Durchlauf nach dem Verlassen, damit kein halber Zustand
+    // stehen bleibt.
+    if (!sichtbar) { listenSchritt(); schlussSchritt(); return; }
+    if (!laeuft) { laeuft = true; requestAnimationFrame(schleife); }
+  }, { rootMargin: '10% 0px' }).observe(listen);
+
+  new IntersectionObserver((eintraege) => {
+    for (const e of eintraege) sichtbar += e.isIntersecting ? 1 : -1;
+    sichtbar = Math.max(0, sichtbar);
+    if (!sichtbar) { listenSchritt(); schlussSchritt(); return; }
+    if (!laeuft) { laeuft = true; requestAnimationFrame(schleife); }
+  }, { rootMargin: '10% 0px' }).observe(schluss);
+
+  listenSchritt();
+  schlussSchritt();
 
   ScrollCraft.mount(document);
 </script>
