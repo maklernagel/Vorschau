@@ -1498,7 +1498,6 @@ footer h2{font-size:1.2rem}
 <script src="scroll/weiche.js"></script>
 <script src="scroll/scrollcraft.js"></script>
 <script>
-  ScrollCraft.mount(document);
   // Der Abstandhalter wird einmal beim Mounten vermessen; meldet die
   // Fensterhoehe dabei 0, haette die Seite keine Scrollstrecke.
   addEventListener('load', function () { dispatchEvent(new Event('resize')); });
@@ -1540,7 +1539,13 @@ footer h2{font-size:1.2rem}
   const GEWICHT = 1.4;
   const PEAK = 2;
 
-  
+  // mount() steht am Ende dieses Skripts, nicht hier. Beim Mounten liest die
+  // Engine sofort die Scrollstelle und meldet die Etappe per sc:waypoint --
+  // stand es oben, war dieses Ereignis durch, bevor die Leiste unten ihren
+  // Zuhörer registriert hatte. Beim Laden am Seitenanfang fiel das nicht auf
+  // (Etappe 0 ist ohnehin voreingestellt), beim Neuladen mitten in der Seite
+  // schon: Das Bild zeigte das Fenster, die Leiste zeigte Ankunft. Genau so
+  // sieht es aus, als wäre die Seite zurückgesprungen.
 
   // Der Abstandhalter wird einmal beim Mounten vermessen. Meldet die Fensterhöhe
   // dabei 0, hat die Seite keine Scrollstrecke und sieht aus wie ein Standbild.
@@ -1634,6 +1639,11 @@ footer h2{font-size:1.2rem}
   // der Nachsatz erscheint: gesagt hat der Nutzer damit nichts.
   griff.addEventListener('pointercancel', (e) => loslassen(e, false));
 
+  // Jetzt erst: Leiste, Teiler und ihre Zuhörer stehen, das erste
+  // sc:waypoint-Ereignis kommt also an.
+  
+
+  ScrollCraft.mount(document);
 </script>
 </body>
 </html>

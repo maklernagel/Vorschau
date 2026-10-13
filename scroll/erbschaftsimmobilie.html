@@ -437,7 +437,13 @@
   const GEWICHT = 1.4;
   const PEAK = 2;
 
-  ScrollCraft.mount(document);
+  // mount() steht am Ende dieses Skripts, nicht hier. Beim Mounten liest die
+  // Engine sofort die Scrollstelle und meldet die Etappe per sc:waypoint --
+  // stand es oben, war dieses Ereignis durch, bevor die Leiste unten ihren
+  // Zuhörer registriert hatte. Beim Laden am Seitenanfang fiel das nicht auf
+  // (Etappe 0 ist ohnehin voreingestellt), beim Neuladen mitten in der Seite
+  // schon: Das Bild zeigte das Fenster, die Leiste zeigte Ankunft. Genau so
+  // sieht es aus, als wäre die Seite zurückgesprungen.
 
   // Der Abstandhalter wird einmal beim Mounten vermessen. Meldet die Fensterhöhe
   // dabei 0, hat die Seite keine Scrollstrecke und sieht aus wie ein Standbild.
@@ -530,6 +536,10 @@
   // schickt pointercancel statt pointerup. Dann faellt alles zurueck, ohne dass
   // der Nachsatz erscheint: gesagt hat der Nutzer damit nichts.
   griff.addEventListener('pointercancel', (e) => loslassen(e, false));
+
+  // Jetzt erst: Leiste, Teiler und ihre Zuhörer stehen, das erste
+  // sc:waypoint-Ereignis kommt also an.
+  ScrollCraft.mount(document);
 </script>
 <script>
   // Diagnose nur auf Zuruf: dieselbe Adresse mit #diag am Ende.

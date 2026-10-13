@@ -1273,7 +1273,6 @@ footer h2{font-size:1.2rem}
 <script src="scroll/weiche.js"></script>
 <script src="scroll/scrollcraft.js"></script>
 <script>
-  ScrollCraft.mount(document);
   // Der Abstandhalter wird einmal beim Mounten vermessen; meldet die
   // Fensterhoehe dabei 0, haette die Seite keine Scrollstrecke.
   addEventListener('load', function () { dispatchEvent(new Event('resize')); });
@@ -1311,6 +1310,7 @@ footer h2{font-size:1.2rem}
 </script>
 <script>
 
+  ScrollCraft.mount(document);
 </script>
 </body>
 </html>
