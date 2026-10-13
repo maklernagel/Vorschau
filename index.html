@@ -1071,6 +1071,13 @@ footer h2{font-size:1.2rem}
 <script>
 (function(){
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Ohne diese Zeile bleibt das Portrait auf scale(1.12) stehen: Das CSS
+     blendet es ueber body.loaded in seine Endgroesse, und die Klasse wurde
+     hier nie gesetzt. Das Bild sass dadurch zu gross in seinem Rahmen. Auf den
+     Schwerpunktseiten stand die Zeile von Anfang an. */
+  window.addEventListener('load', function(){ document.body.classList.add('loaded'); });
+
   var prog = document.getElementById('progress');
   var sticky = document.getElementById('stickyCta');
   var hero = document.querySelector('header.hero');
