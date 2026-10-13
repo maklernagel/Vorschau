@@ -332,6 +332,7 @@ footer h2{font-size:1.2rem}
 
 <link rel="stylesheet" href="scroll/scrollcraft.css">
 <style>
+  :root { --naht-grund: #0A0C12; }
 
   :root {
     --sc-canvas:     #F2F1EE;
@@ -553,20 +554,49 @@ footer h2{font-size:1.2rem}
   }
 
   /* ---- Naht zwischen Auftritt und Text ---- */
-  .sc-naht { position: relative; z-index: 6; background: var(--sc-canvas);
+  /* z-index 25 liegt ueber der Textebene des Auftritts (--sc-z-copy ist 20).
+     Mit 6 lagen Terminknopf und Bewertung ueber der Naht und ragten in den
+     Textteil hinein. */
+  .sc-naht {
+    /* Eigene Textfarben, nicht die Tokens der Seite: Die Trennungsseite ist
+       eine helle Seite, ihr --sc-ink-soft (#5A5F6B) und ihr Akzent (#0018A8)
+       sind fuer hellen Grund gemacht. Auf dem dunklen Nahtgrund kamen sie auf
+       3,06:1 und 1,58:1 -- das Wort "Weiterlesen" war praktisch unsichtbar.
+       Die Naht ist immer dunkel, also bringt sie ihre Farben selbst mit. */
+    --naht-tinte: #F4F6FB; --naht-grau: #AEB6CC; --naht-akzent: #6E86FF;
+    position: relative; z-index: 25; background: var(--naht-grund);
     padding: clamp(4rem,13vh,7.5rem) clamp(1.25rem,5vw,5.5rem) 0; }
+  .sc-naht__label { margin: 0 0 .7rem; text-align: center;
+    font-family: var(--sc-font-text); font-size: .68rem; font-weight: 600;
+    letter-spacing: .18em; text-transform: uppercase; color: var(--naht-akzent); }
   .sc-naht__satz { max-width: 34ch; margin: 0 auto; text-align: center;
     font-family: var(--sc-font-text); font-size: clamp(.95rem,1.5vw,1.08rem);
-    line-height: 1.6; color: var(--sc-ink-soft); }
+    line-height: 1.6; color: var(--naht-grau); }
+  .sc-naht__pfeil { display: block; width: 34px; height: 34px;
+    margin: 1.4rem auto 0; color: var(--naht-grau);
+    border: 1px solid currentColor; border-radius: 50%; padding: 5px;
+    transition: color .3s ease, transform .3s ease; }
+  .sc-naht__pfeil svg { width: 100%; height: 100%; display: block; }
+  .sc-naht__pfeil:hover, .sc-naht__pfeil:focus-visible {
+    color: var(--naht-tinte); transform: translateY(2px); }
+  #weiterlesen-ziel { display: block; scroll-margin-top: 1.6rem; }
   .sc-naht::after { content: ""; display: block; height: clamp(5rem,15vh,9rem);
     margin: clamp(3rem,9vh,5rem) calc(-1 * clamp(1.25rem,5vw,5.5rem)) 0;
-    background: linear-gradient(to bottom, var(--sc-canvas) 0%, #1A2238 34%, var(--papier) 100%); }
+    background: linear-gradient(to bottom, var(--naht-grund) 0%, var(--naht-grund) 22%, var(--papier) 100%); }
   /* Die Papierkoernung der Textseite liegt fest ueber allem (z-index 5). Ueber
      dem Auftritt hat sie nichts zu suchen: Sie ist fuer helles Papier gedacht
      und legt sich sonst als Schleier ueber das Video. */
   body::after { z-index: 4; }
   .sc-kopf, .sc-naht { isolation: isolate; }
   .sc-kopf .route { display: none; }
+  /* Die Textseite faerbt Ueberschriften und Links auf Elementebene
+     (h1,h2,h3 -> var(--tanne), a -> var(--tanne-2)). Das schlaegt in den Kopf
+     durch, und die Schlusszeile des Auftritts stand dadurch blau statt weiss
+     auf dem dunklen Bild. Im Kopf gilt die Farbwelt des Auftritts.
+     Nur Elemente ohne eigene Klasse werden zurueckgesetzt: Terminknopf,
+     Quellenzeile und die Schrittnummern bringen ihre Farben selbst mit. */
+  .sc-kopf h1, .sc-kopf h2, .sc-kopf h3 { color: inherit; }
+  .sc-kopf a:not([class]) { color: inherit; }
   /* Die Buehne des Auftritts steht fest im Bild (position: fixed) und bleibt
      dort, auch wenn der Auftritt laengst vorbei ist. Auf der reinen
      Scrollseite faellt das nicht auf, weil sie die ganze Seite ist; hier laege
@@ -659,14 +689,48 @@ footer h2{font-size:1.2rem}
       </div>
     </div>
   </section>
+<section data-sc-act="scrub" data-sc-span="2.8" data-sc-dwell="0.4" data-sc-expose id="akt-schluss">
+    <div data-sc-stage>
+      <img class="sc-stage__poster" src="scroll/assets/trennung/p04.webp" data-sc-lite="scroll/assets/trennung/l04.webp" data-sc-lite-mobile="scroll/assets/trennung/l04-m.webp" alt="">
+      <video data-sc-scrub data-sc-src="scroll/assets/trennung/04.mp4"
+             data-sc-src-mobile="scroll/assets/trennung/04-m.mp4" playsinline muted></video>
+      <div class="sc-scrim"></div>
+      <div class="schluss">
+        <div class="schluss__text sc-copy" data-sc-cue="0.34">
+          <h2>Ein Verkauf, den beide unterschreiben können.</h2>
+          <p class="satz">Wer gemeinsam verkauft, erzielt in aller Regel mehr als bei
+            einer Versteigerung. Und beide Seiten können mit dem Ergebnis planen.</p>
+          <a class="termin" href="https://outlook.office.com/bookwithme/user/42450101008e4181b971c3a67ca974ea@Nagelverhandelt.onmicrosoft.com/meetingtype/ysZKRUtl8UOYFehYCOtjdg2?bookingcode=baa503d6-192f-48c1-934c-13e971a4608c&amp;anonymous&amp;ep=mlink" target="_blank" rel="noopener">Erstgespräch buchen</a>
+          <p class="bewertung">
+            <span class="bewertung__sterne" aria-hidden="true">★★★★★</span>
+            <b>5,0</b> von 5
+            <span class="bewertung__quelle">aus 50 Bewertungen auf
+              <a href="https://www.provenexpert.com/de-de/andreas-nagel/" target="_blank" rel="noopener">ProvenExpert</a></span>
+          </p>
+          <blockquote class="sc-stimme">„Außerordentlich zuvorkommend auch in herausfordernden Situationen.
+            Fast schon bedauerlich, das ich nur 1 Objekt zu verkaufen hatte.“
+            <cite>15.12.2024</cite></blockquote>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
 
-<!-- Die Naht: hier endet der Auftritt und beginnt der Text. Der Satz steht auf
-     dem vollen dunklen Grund, der Verlauf nach hell kommt erst darunter und
-     traegt keine Schrift mehr. Siehe CLAUDE.md, Startseite. -->
+<!-- Weiterlesen: Der Auftritt ist zu Ende, die Terminbuchung steht darueber.
+     Wer den Termin nicht gleich will, findet hier den Weg in den langen Text.
+     Der Satz steht auf dem vollen dunklen Grund, der Verlauf nach hell kommt
+     erst darunter und traegt keine Schrift mehr. Siehe CLAUDE.md, Startseite. -->
 <section class="sc-naht">
-  <p class="sc-naht__satz">Soweit der Anfang. Darunter stehen die vier Wege, der Zeitpunkt, die Rolle der Bank und was das Haus in Krefeld wert ist.</p>
+  <p class="sc-naht__label">Weiterlesen</p>
+  <p class="sc-naht__satz">Wenn Sie lieber erst nachlesen: Darunter stehen die vier Wege, der Zeitpunkt, die Rolle der Bank und was das Haus in Krefeld wert ist.</p>
+  <a class="sc-naht__pfeil" href="#weiterlesen-ziel" aria-label="Weiter zum ausführlichen Teil">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 4v15M5.5 12.5 12 19l6.5-6.5" fill="none" stroke="currentColor"
+            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
 </section>
+<span id="weiterlesen-ziel"></span>
 
 
 <div id="progress"></div>
@@ -1224,13 +1288,16 @@ footer h2{font-size:1.2rem}
   (function () {
     var naht = document.querySelector('.sc-naht');
     if (!naht) return;
-    var ende = 0, zustand = null;
+    var oben = 0, zustand = null;
     function messen() {
-      var r = naht.getBoundingClientRect();
-      ende = r.top + scrollY + r.height;
+      oben = naht.getBoundingClientRect().top + scrollY;
     }
     function pruefen() {
-      var vorbei = scrollY > ende;
+      // Abgeschaltet wird, sobald die Naht halb im Bild ist, nicht erst wenn
+      // sie ganz durch ist: Sonst steht der Terminblock des Auftritts noch
+      // ueber dem anlaufenden Text. Die Naht traegt oben dieselbe Farbe wie
+      // der Auftritt, der Wechsel ist deshalb nicht zu sehen.
+      var vorbei = scrollY + innerHeight * 0.5 > oben;
       if (vorbei === zustand) return;
       zustand = vorbei;
       document.documentElement.classList.toggle('sc-vorbei', vorbei);

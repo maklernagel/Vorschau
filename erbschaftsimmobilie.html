@@ -332,6 +332,7 @@ footer h2{font-size:1.2rem}
 
 <link rel="stylesheet" href="scroll/scrollcraft.css">
 <style>
+  :root { --naht-grund: #0B1020; }
 
   :root {
     --sc-canvas:     #0B1020;
@@ -631,20 +632,49 @@ footer h2{font-size:1.2rem}
   }
 
   /* ---- Naht zwischen Auftritt und Text ---- */
-  .sc-naht { position: relative; z-index: 6; background: var(--sc-canvas);
+  /* z-index 25 liegt ueber der Textebene des Auftritts (--sc-z-copy ist 20).
+     Mit 6 lagen Terminknopf und Bewertung ueber der Naht und ragten in den
+     Textteil hinein. */
+  .sc-naht {
+    /* Eigene Textfarben, nicht die Tokens der Seite: Die Trennungsseite ist
+       eine helle Seite, ihr --sc-ink-soft (#5A5F6B) und ihr Akzent (#0018A8)
+       sind fuer hellen Grund gemacht. Auf dem dunklen Nahtgrund kamen sie auf
+       3,06:1 und 1,58:1 -- das Wort "Weiterlesen" war praktisch unsichtbar.
+       Die Naht ist immer dunkel, also bringt sie ihre Farben selbst mit. */
+    --naht-tinte: #F4F6FB; --naht-grau: #AEB6CC; --naht-akzent: #6E86FF;
+    position: relative; z-index: 25; background: var(--naht-grund);
     padding: clamp(4rem,13vh,7.5rem) clamp(1.25rem,5vw,5.5rem) 0; }
+  .sc-naht__label { margin: 0 0 .7rem; text-align: center;
+    font-family: var(--sc-font-text); font-size: .68rem; font-weight: 600;
+    letter-spacing: .18em; text-transform: uppercase; color: var(--naht-akzent); }
   .sc-naht__satz { max-width: 34ch; margin: 0 auto; text-align: center;
     font-family: var(--sc-font-text); font-size: clamp(.95rem,1.5vw,1.08rem);
-    line-height: 1.6; color: var(--sc-ink-soft); }
+    line-height: 1.6; color: var(--naht-grau); }
+  .sc-naht__pfeil { display: block; width: 34px; height: 34px;
+    margin: 1.4rem auto 0; color: var(--naht-grau);
+    border: 1px solid currentColor; border-radius: 50%; padding: 5px;
+    transition: color .3s ease, transform .3s ease; }
+  .sc-naht__pfeil svg { width: 100%; height: 100%; display: block; }
+  .sc-naht__pfeil:hover, .sc-naht__pfeil:focus-visible {
+    color: var(--naht-tinte); transform: translateY(2px); }
+  #weiterlesen-ziel { display: block; scroll-margin-top: 1.6rem; }
   .sc-naht::after { content: ""; display: block; height: clamp(5rem,15vh,9rem);
     margin: clamp(3rem,9vh,5rem) calc(-1 * clamp(1.25rem,5vw,5.5rem)) 0;
-    background: linear-gradient(to bottom, var(--sc-canvas) 0%, #1A2238 34%, var(--papier) 100%); }
+    background: linear-gradient(to bottom, var(--naht-grund) 0%, var(--naht-grund) 22%, var(--papier) 100%); }
   /* Die Papierkoernung der Textseite liegt fest ueber allem (z-index 5). Ueber
      dem Auftritt hat sie nichts zu suchen: Sie ist fuer helles Papier gedacht
      und legt sich sonst als Schleier ueber das Video. */
   body::after { z-index: 4; }
   .sc-kopf, .sc-naht { isolation: isolate; }
   .sc-kopf .route { display: none; }
+  /* Die Textseite faerbt Ueberschriften und Links auf Elementebene
+     (h1,h2,h3 -> var(--tanne), a -> var(--tanne-2)). Das schlaegt in den Kopf
+     durch, und die Schlusszeile des Auftritts stand dadurch blau statt weiss
+     auf dem dunklen Bild. Im Kopf gilt die Farbwelt des Auftritts.
+     Nur Elemente ohne eigene Klasse werden zurueckgesetzt: Terminknopf,
+     Quellenzeile und die Schrittnummern bringen ihre Farben selbst mit. */
+  .sc-kopf h1, .sc-kopf h2, .sc-kopf h3 { color: inherit; }
+  .sc-kopf a:not([class]) { color: inherit; }
   /* Die Buehne des Auftritts steht fest im Bild (position: fixed) und bleibt
      dort, auch wenn der Auftritt laengst vorbei ist. Auf der reinen
      Scrollseite faellt das nicht auf, weil sie die ganze Seite ist; hier laege
@@ -682,9 +712,18 @@ footer h2{font-size:1.2rem}
       <img class="sc-world__poster" src="scroll/assets/erbe/p03.webp" data-sc-lite="scroll/assets/erbe/l03.webp" data-sc-lite-mobile="scroll/assets/erbe/l03-m.webp" alt="" decoding="async" fetchpriority="low">
       <video data-sc-src="scroll/assets/erbe/03.mp4" data-sc-src-mobile="scroll/assets/erbe/03-m.mp4"></video>
     </div>
-    
-    
-    
+    <div data-sc-segment data-sc-w="1.4" data-sc-linger="0.12" data-sc-waypoint="Treppe">
+      <img class="sc-world__poster" src="scroll/assets/erbe/p04.webp" data-sc-lite="scroll/assets/erbe/l04.webp" data-sc-lite-mobile="scroll/assets/erbe/l04-m.webp" alt="" decoding="async" fetchpriority="low">
+      <video data-sc-src="scroll/assets/erbe/04.mp4" data-sc-src-mobile="scroll/assets/erbe/04-m.mp4"></video>
+    </div>
+    <div data-sc-segment data-sc-w="1.4" data-sc-linger="0.12" data-sc-waypoint="Dachboden">
+      <img class="sc-world__poster" src="scroll/assets/erbe/p05.webp" data-sc-lite="scroll/assets/erbe/l05.webp" data-sc-lite-mobile="scroll/assets/erbe/l05-m.webp" alt="" decoding="async" fetchpriority="low">
+      <video data-sc-src="scroll/assets/erbe/05.mp4" data-sc-src-mobile="scroll/assets/erbe/05-m.mp4"></video>
+    </div>
+    <div data-sc-segment data-sc-w="1.4" data-sc-linger="0.12" data-sc-waypoint="Fenster">
+      <img class="sc-world__poster" src="scroll/assets/erbe/p06.webp" data-sc-lite="scroll/assets/erbe/l06.webp" data-sc-lite-mobile="scroll/assets/erbe/l06-m.webp" alt="" decoding="async" fetchpriority="low">
+      <video data-sc-src="scroll/assets/erbe/06.mp4" data-sc-src-mobile="scroll/assets/erbe/06-m.mp4"></video>
+    </div>
   </div>
 
   <div data-sc-world-copy>
@@ -696,7 +735,7 @@ footer h2{font-size:1.2rem}
         und die Frage, wer sich jetzt darum kümmert.</p>
     </div>
 
-    <div class="sc-copy sc-copy--lead" data-sc-copy data-sc-window="0.380 0.650">
+    <div class="sc-copy sc-copy--lead" data-sc-copy data-sc-window="0.19 0.325">
       <h2>Vier Erben, und keinem gehört ein Viertel.</h2>
       <p class="satz">In einer Erbengemeinschaft gehört das Haus allen zusammen,
         nicht jedem ein Viertel davon.</p>
@@ -707,16 +746,47 @@ footer h2{font-size:1.2rem}
          die hat Andreas am 9.10. gemeldet ("lange scrollen bis zum nächsten
          Text"). Jetzt 1,01, und das Fenster beginnt mit der Etappe statt
          deutlich nach ihr. -->
-    <div class="sc-copy sc-copy--trail" data-sc-copy data-sc-window="0.740 0.970">
+    <div class="sc-copy sc-copy--trail" data-sc-copy data-sc-window="0.37 0.485">
       <p class="satz">Vor jeder Frage nach dem Preis steht ein Zimmer, in dem
         jemand gelebt hat.</p>
     </div>
 
-    
+    <div class="sc-copy sc-copy--lead sc-copy--breit" data-sc-copy data-sc-window="0.53 0.675">
+      <h2>Verkaufen ist nur einer von drei Wegen.</h2>
+      <div class="schritte">
+        <div class="schritt"><b>Übernehmen</b><p class="satz">Ein Erbe behält das Haus
+          und zahlt die anderen aus.</p></div>
+        <div class="schritt"><b>Behalten</b><p class="satz">Das Haus wird vermietet, die
+          Erträge werden geteilt.</p></div>
+        <div class="schritt"><b>Verkaufen</b><p class="satz">Alle verkaufen zusammen, der
+          Erlös wird geteilt.</p></div>
+      </div>
+    </div>
 
-    
+    <div class="sc-copy sc-copy--lead" data-sc-copy data-sc-window="0.68 0.845">
+      <h2>Der Wert zum Todestag bestimmt die Steuer.</h2>
+      <p class="satz">Wird er zu spät oder zu hoch angesetzt, zahlt die Familie
+        darauf. Davon getrennt läuft die Spekulationsfrist: Sie beginnt beim
+        Erben nicht neu. Die Zeit, in der die Immobilie dem Erblasser gehörte,
+        wird angerechnet.
+        <span class="sc-quelle">§&nbsp;23 EStG</span></p>
+    </div>
 
-    
+    <div class="sc-copy sc-copy--trail" data-sc-copy data-sc-window="0.855 1 0.33 0">
+      <h2>Der erste Schritt ist ein Gespräch.</h2>
+      <p class="satz">30 Minuten, kostenlos und ohne Auftrag. Danach wissen Sie,
+        woran Sie sind.</p>
+      <a class="termin" href="https://outlook.office.com/bookwithme/user/42450101008e4181b971c3a67ca974ea@Nagelverhandelt.onmicrosoft.com/meetingtype/ysZKRUtl8UOYFehYCOtjdg2?bookingcode=baa503d6-192f-48c1-934c-13e971a4608c&amp;anonymous&amp;ep=mlink" target="_blank" rel="noopener">Erstgespräch buchen</a>
+      <p class="bewertung">
+        <span class="bewertung__sterne" aria-hidden="true">★★★★★</span>
+        <b>5,0</b> von 5
+        <span class="bewertung__quelle">aus 50 Bewertungen auf
+          <a href="https://www.provenexpert.com/de-de/andreas-nagel/" target="_blank" rel="noopener">ProvenExpert</a></span>
+      </p>
+      <blockquote class="sc-stimme">„Wir hatten sehr gute Zusammenarbeit, Herr Nagel hat uns regelmässige
+        Updates über den Stand des Verkaufs gegeben.“
+        <cite>Familie M., 15.12.2024</cite></blockquote>
+    </div>
   </div>
 
   <div data-sc-spacer aria-hidden="true"></div>
@@ -732,12 +802,21 @@ footer h2{font-size:1.2rem}
 </div>
 </div>
 
-<!-- Die Naht: hier endet der Auftritt und beginnt der Text. Der Satz steht auf
-     dem vollen dunklen Grund, der Verlauf nach hell kommt erst darunter und
-     traegt keine Schrift mehr. Siehe CLAUDE.md, Startseite. -->
+<!-- Weiterlesen: Der Auftritt ist zu Ende, die Terminbuchung steht darueber.
+     Wer den Termin nicht gleich will, findet hier den Weg in den langen Text.
+     Der Satz steht auf dem vollen dunklen Grund, der Verlauf nach hell kommt
+     erst darunter und traegt keine Schrift mehr. Siehe CLAUDE.md, Startseite. -->
 <section class="sc-naht">
-  <p class="sc-naht__satz">Soweit der Anfang. Darunter steht alles, was eine Erbengemeinschaft wissen sollte: das Recht, die Steuern, die Fristen und die Zahlen.</p>
+  <p class="sc-naht__label">Weiterlesen</p>
+  <p class="sc-naht__satz">Wenn Sie lieber erst nachlesen: Darunter steht alles, was eine Erbengemeinschaft wissen sollte. Das Recht, die Steuern, die Fristen und die Zahlen für Krefeld.</p>
+  <a class="sc-naht__pfeil" href="#weiterlesen-ziel" aria-label="Weiter zum ausführlichen Teil">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 4v15M5.5 12.5 12 19l6.5-6.5" fill="none" stroke="currentColor"
+            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
 </section>
+<span id="weiterlesen-ziel"></span>
 
 
 <div id="progress"></div>
@@ -1434,13 +1513,16 @@ footer h2{font-size:1.2rem}
   (function () {
     var naht = document.querySelector('.sc-naht');
     if (!naht) return;
-    var ende = 0, zustand = null;
+    var oben = 0, zustand = null;
     function messen() {
-      var r = naht.getBoundingClientRect();
-      ende = r.top + scrollY + r.height;
+      oben = naht.getBoundingClientRect().top + scrollY;
     }
     function pruefen() {
-      var vorbei = scrollY > ende;
+      // Abgeschaltet wird, sobald die Naht halb im Bild ist, nicht erst wenn
+      // sie ganz durch ist: Sonst steht der Terminblock des Auftritts noch
+      // ueber dem anlaufenden Text. Die Naht traegt oben dieselbe Farbe wie
+      // der Auftritt, der Wechsel ist deshalb nicht zu sehen.
+      var vorbei = scrollY + innerHeight * 0.5 > oben;
       if (vorbei === zustand) return;
       zustand = vorbei;
       document.documentElement.classList.toggle('sc-vorbei', vorbei);
