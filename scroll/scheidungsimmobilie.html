@@ -228,6 +228,28 @@
     display: block; margin-top: .35em; font-style: normal;
     font-size: .74rem; color: inherit; opacity: .74;
   }
+
+  /* Kennzeichnung des Bildmaterials. Sie steht fest im Bild, weil in dieser
+     Grammatik kein einzelnes Bild eine Bildunterschrift tragen kann: Die
+     Aufnahmen loesen einander unter dem Finger ab, eine Beschriftung je Etappe
+     waere ein Flackern. Ein Hinweis fuer die ganze Buehne sagt dasselbe und
+     steht ruhig.
+
+     Eigener Grund statt bloss gedaempfter Schrift: Der Text liegt mal auf
+     dunklem Flur, mal auf hellem Fenster. Mit rgba(0,0,0,0.72) darunter kommt
+     Weiss im hellsten Fall auf rund 7,4:1 -- unabhaengig davon, was das Video
+     gerade zeigt. Kein backdrop-filter: der zwaenge den Compositor, in jedem
+     Bild das Video darunter zu lesen (siehe CLAUDE.md). */
+  .ki-marke {
+    position: fixed; z-index: 48;
+    right: clamp(1rem, 3vw, 2.5rem);
+    bottom: clamp(0.8rem, 2vh, 1.4rem);
+    margin: 0; padding: 0.4em 0.7em; border-radius: 2px;
+    background: rgba(0, 0, 0, 0.72); color: #FFFFFF;
+    font: 500 0.78rem/1 var(--sc-font-text);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    pointer-events: none;
+  }
 </style>
 </head>
 <body>
@@ -451,5 +473,6 @@
   listenSchritt();
   schlussSchritt();
 </script>
+<p class="ki-marke">Bildmaterial KI-generiert</p>
 </body>
 </html>

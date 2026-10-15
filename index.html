@@ -547,6 +547,28 @@ footer h2{font-size:1.2rem}
     font-size: .74rem; color: inherit; opacity: .74;
   }
 
+  /* Kennzeichnung des Bildmaterials. Sie steht fest im Bild, weil in dieser
+     Grammatik kein einzelnes Bild eine Bildunterschrift tragen kann: Die
+     Aufnahmen loesen einander unter dem Finger ab, eine Beschriftung je Etappe
+     waere ein Flackern. Ein Hinweis fuer die ganze Buehne sagt dasselbe und
+     steht ruhig.
+
+     Eigener Grund statt bloss gedaempfter Schrift: Der Text liegt mal auf
+     dunklem Flur, mal auf hellem Fenster. Mit rgba(0,0,0,0.72) darunter kommt
+     Weiss im hellsten Fall auf rund 7,4:1 -- unabhaengig davon, was das Video
+     gerade zeigt. Kein backdrop-filter: der zwaenge den Compositor, in jedem
+     Bild das Video darunter zu lesen (siehe CLAUDE.md). */
+  .ki-marke {
+    position: fixed; z-index: 52;
+    right: clamp(1rem, 3vw, 2.5rem);
+    bottom: clamp(0.8rem, 2vh, 1.4rem);
+    margin: 0; padding: 0.4em 0.7em; border-radius: 2px;
+    background: rgba(0, 0, 0, 0.72); color: #FFFFFF;
+    font: 500 0.78rem/1 var(--sc-font-text);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    pointer-events: none;
+  }
+
   /* ---- Naht zwischen Auftritt und Text ---- */
   /* z-index 25 liegt ueber der Textebene des Auftritts (--sc-z-copy ist 20).
      Mit 6 lagen Terminknopf und Bewertung ueber der Naht und ragten in den
@@ -603,6 +625,7 @@ footer h2{font-size:1.2rem}
      Zurueckscrollen aber, alles neu zu messen. */
   html.sc-vorbei .sc-world,
   html.sc-vorbei .sc-world__copy,
+  html.sc-vorbei .ki-marke,
   html.sc-vorbei .teiler { opacity: 0; pointer-events: none; }
 
   /* Zurueckgeholt, nachdem scrollcraft.css body uebernommen hat. */
@@ -914,6 +937,11 @@ footer h2{font-size:1.2rem}
 </main>
 
 <!-- Die Weiche entscheidet vor dem Motor, ob Clips geholt werden. Siehe weiche.js. -->
+
+
+
+
+<p class="ki-marke">Bildmaterial KI-generiert</p>
 </div>
 
 <!-- Weiterlesen: Der Auftritt ist zu Ende, die Terminbuchung steht darueber.
