@@ -329,6 +329,18 @@
     letter-spacing: 0.1em; text-transform: uppercase;
     pointer-events: none;
   }
+
+  /* Auf dem Telefon konkurriert die lange Fassung mit dem Text der Akte:
+     229 px Pille auf 390 px Schirm sind 59 Prozent der Breite. Gemessen bei
+     390x844 ueber je zehn Scrollstellen -- lang kollidierte auf allen drei
+     Seiten mit echten Textzeilen (Trennung: "Und zahlt weiter die Rate…",
+     Start: "Termin buchen"), kurz auf keiner. Keine der vier Ecken war mit
+     der langen Fassung frei, das Kuerzen loest es dagegen ueberall.
+     "KI-generiert" ist ausserdem genau der Wortlaut, der im Textteil an
+     jedem Bild steht. */
+  @media (max-width: 760px) {
+    .ki-marke__lang { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -563,6 +575,6 @@
   // sc:waypoint-Ereignis kommt also an.
   ScrollCraft.mount(document);
 </script>
-<p class="ki-marke">Bildmaterial KI-generiert</p>
+<p class="ki-marke"><span class="ki-marke__lang">Bildmaterial </span>KI-generiert</p>
 </body>
 </html>
